@@ -61,7 +61,14 @@ export default function Home() {
               $PUIMON
             </span>
           </div>
-
+         <a
+            href="https://docs.pui.monster"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-[#4F78EB] text-white px-4 py-2 border-2 border-black font-bold uppercase text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-0.75 active:translate-y-0.75 transition-all"
+          >
+            Read Docs
+          </a>
         </div>
       </nav>
 
