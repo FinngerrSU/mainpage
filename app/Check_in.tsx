@@ -95,7 +95,7 @@ export default function CheckIn() {
               <ConnectButton
                 className="w-full sm:w-auto bg-blue-600! text-white! font-bold! text-sm! rounded-xl! border-none! px-8! py-3! hover:bg-blue-700! hover:-translate-y-0.5! transition-all! shadow-sm!"
               >
-                Authenticate to Claim
+                Login-in wallet
               </ConnectButton>
             </div>
           ) : (
