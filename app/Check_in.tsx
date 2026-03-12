@@ -52,71 +52,93 @@ export default function CheckIn() {
     });
   };
   return (
+    <div className="flex gap-2 sm:gap-4 mb-4 group w-full">
+      
+      {/* System Node Line (Matches the Ecosystem Cards) */}
+      
 
-    <main className="max-w-6xl mx-auto px-4 mb-16">
-      <div className="bg-[#FFE600] border-4 border-black rounded-2xl p-6 md:p-8 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] flex flex-col md:flex-row items-center justify-between gap-6">
+      {/* Main Module Card */}
+      <div className="bg-white border border-gray-200 shadow-sm hover:shadow-md rounded-2xl p-5 w-full max-w-200transition-all duration-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
 
-        {/* Left Side: Stats/Info */}
-        <div className="flex items-center gap-6">
-          <div className="hidden md:flex w-20 h-20 bg-white border-4 border-black rounded-full items-center justify-center text-4xl shadow-[4px_4px_0px_0px_#000]">
-            💎
+        {/* Left Side: System Stats/Info */}
+        <div className="flex-1">
+          {/* Metadata Tags */}
+          <div className="flex flex-wrap items-center gap-2 mb-3 text-xs font-bold uppercase tracking-wider">
+            <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-md border border-gray-200">
+              Reward Module
+            </span>
+            <span className="bg-emerald-100 text-emerald-700 px-2 py-1 rounded-md flex items-center gap-1.5">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+              </span>
+              READY TO CLAIM
+            </span>
+            <span className="text-gray-400 font-mono lowercase tracking-normal hidden sm:inline ml-auto">
+              // sys::daily_loot
+            </span>
           </div>
-          <div>
-            <h3 className="text-3xl font-black uppercase italic leading-none mb-2">
-              Daily Loot Drop
-            </h3>
-            <p className="font-bold text-black/70">
-              Status: <span className="text-green-600">READY TO CLAIM</span> • Reward: <span className="underline">10000 $PUIMON</span>
-            </p>
-          </div>
+
+          <h3 className="font-bold text-xl mb-1 text-gray-900 tracking-tight">
+            Daily Drop Protocol
+          </h3>
+          <p className="text-gray-500 font-mono text-sm">
+            Allocation: <span className="font-bold text-blue-600">10,000 $PUIMON</span>
+          </p>
         </div>
 
-        {/* Right Side: The Interactive Button */}
-        <div className="w-full md:w-auto flex flex-col items-center gap-4">
+        {/* Right Side: The Interactive Panel */}
+        <div className="w-full md:w-auto flex flex-col items-center gap-3">
           {!account ? (
-            /* 1. DISCONNECTED: The Big Login Button */
-            <div className="bg-white border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+            /* 1. DISCONNECTED */
+            <div className="w-full">
               <ConnectButton
-                
-                className="bg-[#4F78EB]! text-white! font-black! uppercase! rounded-none! border-none! px-10! py-4! text-xl! hover:bg-white! transition-colors!"
-              >Login To Claim</ConnectButton>
+                className="w-full sm:w-auto bg-blue-600! text-white! font-bold! text-sm! rounded-xl! border-none! px-8! py-3! hover:bg-blue-700! hover:-translate-y-0.5! transition-all! shadow-sm!"
+              >
+                Authenticate to Claim
+              </ConnectButton>
             </div>
           ) : (
-            /* 2. CONNECTED: Built-in Wallet Menu + Punch In Button */
-            <div className="flex flex-col items-center gap-4 w-full">
-
-              {/* This ConnectButton will now show the address & handle the Switch/Disconnect menu */}
-              <div className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_#000] overflow-hidden">
-                <ConnectButton
-                  className="bg-white! text-black! font-black! text-xs! uppercase! rounded-none! border-none! px-4! py-2! hover:bg-gray-100! transition-all!"
-                />
-              </div>
-
+            /* 2. CONNECTED */
+            <div className="flex flex-col items-end gap-3 w-full">
+              
               {/* THE ACTUAL CLAIM BUTTON */}
               <button
                 onClick={handleCheckIn}
                 disabled={isPending}
                 className={`
-          w-full md:w-64 py-4 px-8 text-2xl font-black uppercase tracking-tighter
-          border-4 border-black rounded-xl transition-all
-          ${isPending
-                    ? 'bg-gray-400 translate-y-1 shadow-none cursor-not-allowed'
-                    : 'bg-black text-white hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_#4F78EB] active:translate-y-1 active:shadow-none'
+                  w-full sm:w-auto px-8 py-3 text-sm font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2
+                  ${isPending
+                    ? 'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed shadow-none'
+                    : 'bg-emerald-600 text-white hover:bg-emerald-700 hover:-translate-y-0.5 hover:shadow-md'
                   }
-        `}
+                `}
               >
-                {isPending ? "Claiming..." : "Punch In ➜"}
+                {isPending ? (
+                  <>
+                    <span className="animate-spin h-4 w-4 border-2 border-gray-300 border-t-gray-500 rounded-full"></span>
+                    Processing...
+                  </>
+                ) : (
+                  "Claim Allocation ➜"
+                )}
               </button>
 
-              <p className="text-[10px] font-black opacity-40 uppercase tracking-tighter">
-                Click address to switch or logout
-              </p>
+              {/* Minimal ConnectButton for Wallet/Address Menu */}
+              <div className="w-full sm:w-auto flex flex-col items-end gap-1 text-right">
+                <ConnectButton
+                  className="bg-gray-50! text-gray-600! font-mono! text-xs! font-medium! rounded-lg! border! border-gray-200! px-3! py-1.5! hover:bg-gray-100! transition-all! shadow-none!"
+                />
+                <p className="text-[10px] text-gray-400 font-medium tracking-wide">
+                  Click address to manage session
+                </p>
+              </div>
+
             </div>
           )}
         </div>
 
       </div>
-    </main>
-
+    </div>
   );
 }

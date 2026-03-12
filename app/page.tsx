@@ -1,179 +1,174 @@
-
 import Link from 'next/link';
 import { Metadata } from 'next';
 import CheckIn from './Check_in';
 import DepositWithdraw from './depositWithdraw';
 
 const LOGO_URL = "https://arweave.net/g2Fgf9YlkDv6B4YD0AZPZjcelUCmntk-jVEt28VzJVU";
-// Helper component for the "Neo-Brutalist" Cards
-const MemeCard = ({ title, emoji, desc, link, colorClass }: { title: string, emoji: string, desc: string, link: string, colorClass: string }) => (
-  <Link href={link} className="block group">
-    <div className={`
-      relative h-full p-6 border-4 border-black rounded-xl 
-      transition-all duration-150 ease-in-out
-      hover:-translate-y-2 hover:translate-x-1
-      shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
-      hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]
-      ${colorClass}
-    `}>
-      <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-200">
-        {emoji}
-      </div>
-      <h2 className="text-3xl font-black uppercase tracking-tighter text-black mb-2">
-        {title}
-      </h2>
-      <p className="font-bold text-black/80 leading-tight">
-        {desc}
-      </p>
 
-      {/* Decorative "Go" Button inside card */}
-      <div className="mt-6 inline-block bg-black text-white px-4 py-2 font-bold rounded-lg transform group-hover:rotate-2 transition-transform">
-        LETS GO ➜
+// Adapted from the "Reply" style into an "Ecosystem Node"
+const EcosystemCard = ({ title, desc, link, status, category }: { title: string, desc: string, link: string, status: string, category: string }) => {
+  const isLive = status.toLowerCase() !== 'coming soon';
+
+  return (
+    <div className="bg-white border border-gray-200 shadow-sm hover:shadow-md rounded-2xl p-5 flex flex-col h-full transition-all duration-200 group">
+      
+      {/* Module Metadata */}
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+        <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-md border border-gray-200 text-[10px] font-bold uppercase tracking-wider">
+          {category}
+        </span>
+        <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${isLive ? 'bg-emerald-100 text-emerald-700' : 'bg-orange-100 text-orange-700'}`}>
+          {status}
+        </span>
+      </div>
+
+      {/* Content */}
+      <div className="flex-1">
+        <h3 className="font-bold text-lg mb-2 text-gray-900 tracking-tight">{title}</h3>
+        <p className="mb-6 text-gray-500 font-mono text-xs leading-relaxed">{desc}</p>
+      </div>
+      
+      {/* Modern Action Button (Pushed to bottom) */}
+      <div className="mt-auto">
+        {link.startsWith('http') ? (
+          <a href={isLive ? link : '#'} target={isLive ? "_blank" : "_self"} rel="noopener noreferrer" className={`flex justify-center items-center w-full text-sm font-bold px-4 py-2.5 rounded-lg transition-all ${isLive ? 'text-blue-600 hover:text-white bg-blue-50 hover:bg-blue-600' : 'text-gray-400 bg-gray-50 cursor-not-allowed'}`}>
+            {isLive ? 'Launch App ↗' : 'In Development ⏳'}
+          </a>
+        ) : (
+          <Link href={isLive ? link : '#'} className={`flex justify-center items-center w-full text-sm font-bold px-4 py-2.5 rounded-lg transition-all ${isLive ? 'text-blue-600 hover:text-white bg-blue-50 hover:bg-blue-600' : 'text-gray-400 bg-gray-50 cursor-not-allowed'}`}>
+            {isLive ? 'Enter Portal ➜' : 'In Development ⏳'}
+          </Link>
+        )}
       </div>
     </div>
-  </Link>
-);
+  );
+};
 
 export const metadata: Metadata = {
-  title: 'PUIMON Coin- Official HomePage',
-  description: 'All PUIMON Ecosystem here! ',
+  title: 'PUIMON - Core Ecosystem',
+  description: 'Access all PUIMON ecosystem modules here.',
 }
-export default function Home() {
-  
-  return (
-    
-    // MEME VIBE: Bright background (Pepe Green-ish)
-    <main className="min-h-screen bg-[#10D8A6] text-black font-sans selection:text-white pb-20 overflow-x-hidden">
 
-      {/* --- Marquee / Navbar --- */}
-      <nav className="border-b-4 border-[#1a1a1a] bg-[#F0F6FF] sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 h-20 flex items-center justify-between">
+export default function Home() {
+  return (
+    <main className="min-h-screen bg-[#F8F9FA] text-gray-900 font-sans pb-20 selection:bg-blue-200">
+
+      {/* --- System Navbar --- */}
+      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {/* Logo in Navbar */}
-            <div className="w-12 h-12 bg-[#B92B27] border-2 border-[#1a1a1a] rounded-full overflow-hidden flex items-center justify-center">
-              <img
-                src={LOGO_URL}
-                alt="Logo"
-                className="w-full h-full object-cover scale-110"
-              />
+            <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-200">
+              <img src={LOGO_URL} alt="PUIMON" className="w-full h-full object-cover" />
             </div>
-            <span className="text-3xl font-black italic tracking-tighter">
-              $PUIMON
-            </span>
+            <span className="font-black text-xl tracking-tight text-gray-900">PUIMON</span>
           </div>
-         <a
+          <a
             href="https://docs.pui.monster"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block bg-[#4F78EB] text-white px-4 py-2 border-2 border-black font-bold uppercase text-sm shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-0.75 active:translate-y-0.75 transition-all"
+            className="text-sm font-bold text-gray-500 hover:text-gray-900 transition-colors"
           >
-            Read Docs
+            Documentation
           </a>
         </div>
       </nav>
 
-      {/* --- Hero Section --- */}
-      <section className="pt-16 pb-20 text-center px-4">
-        <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto px-4 pt-8">
+        
+        
+        {/* --- Core Overview (Hero Section) --- */}
+        <div className="bg-white border border-gray-200 shadow-sm rounded-2xl p-4 sm:p-6 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          
+          {/* Left: System Status & Title */}
+          <div className="flex flex-col gap-2 w-full sm:w-auto">
+            
+            {/* Status Indicators */}
+            <div className="flex flex-wrap items-center gap-2 text-xs font-medium">
+              <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-md font-bold uppercase tracking-wide">
+                Core Protocol
+              </span>
+              <span className="text-gray-500 border-l border-gray-300 pl-2 hidden sm:block">
+                SUI Mainnet
+              </span>
+              <span className="flex items-center gap-1 text-emerald-600 border-l border-gray-300 pl-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                System Online
+              </span>
+            </div>
 
-          {/* Badge */}
-          <div className="inline-block bg-[#F0F6FF] border-2 border-[#1a1a1a] px-4 py-1 rounded-full font-bold mb-8 -rotate-2 shadow-[4px_4px_0px_0px_#000]">
-            💧 Entertaining MEME COIN
-          </div>
-
-          {/* BIG TEXT */}
-          <h1 className="text-7xl md:text-9xl font-black mb-6 leading-[0.9] tracking-tighter text-[#4F78EB] drop-shadow-sm">
-            PUIMON<br />
-            <span className="text-white">The Future</span>
-          </h1>
-
-          {/* Center Logo Display */}
-          <div className="relative w-56 h-56 mx-auto mb-10 group">
-            {/* Decorative Background Circle */}
-            <div className="absolute inset-0 bg-[#4FB0E5] rounded-full border-4 border-[#1a1a1a] translate-x-3 translate-y-3" />
-            <div className="relative w-full h-full bg-[#B92B27] rounded-full border-4 border-[#1a1a1a] overflow-hidden group-hover:-translate-y-1 transition-transform">
-              <img
-                src={LOGO_URL}
-                alt="Main Logo"
-                className="w-full h-full object-cover scale-110"
-              />
+            <div className="text-gray-900 font-bold text-lg tracking-tight">
+              PUIMON Native Asset
             </div>
           </div>
 
-          <p className="text-xl md:text-2xl font-bold max-w-2xl mx-auto mb-10 text-white drop-shadow-md">
-            Join the lottery, mint the drip, and play to win.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <a
-              href="https://app.cetus.zone/swap/0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC/0xb696b148be1f7d358a2540081ce7052c13c68b7b917895282de4b987e6467e17::puimon::PUIMON"  // 1. Put your URL here
-              target="_blank"                     // 2. Opens in new tab
-              rel="noopener noreferrer"           // 3. Security best practice
-              className="w-full sm:w-auto px-10 py-4 bg-[#654FF0] text-white border-4 border-[#1a1a1a] text-2xl font-black rounded-xl shadow-[6px_6px_0px_0px_#1a1a1a] hover:-translate-y-1 hover:shadow-[10px_10px_0px_0px_#1a1a1a] transition-all inline-block text-center cursor-pointer decoration-0"
-            >
-              BUY $PUIMON
-            </a>
-
-          </div>
+          {/* Right: The Swap Button */}
+          <a
+            href="https://app.cetus.zone/swap/0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC/0xb696b148be1f7d358a2540081ce7052c13c68b7b917895282de4b987e6467e17::puimon::PUIMON"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center px-8 py-3 bg-blue-600 text-white font-bold rounded-xl shadow-sm hover:bg-blue-700 hover:shadow-md hover:-translate-y-0.5 transition-all w-full sm:w-auto gap-2 whitespace-nowrap"
+          >
+            Buy on Cetus DEX
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+          </a>
+          
         </div>
-      </section>
 
-      <CheckIn/>
-      <DepositWithdraw/>
-      {/* --- The "Utility" (Fun) Section --- */}
-      <section className="max-w-6xl mx-auto px-4">
-
-        {/* Section Title */}
-        <div className="text-center mb-12">
-          <div className="inline-block bg-white border-4 border-[#1a1a1a] px-10 py-4 transform -rotate-1 shadow-[8px_8px_0px_0px_#000]">
-            <h2 className="text-4xl font-black uppercase">The Ecosystem</h2>
+        {/* --- Active Modules (Side-by-Side Grid) --- */}
+        <div className="mb-8">
+          <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-2">Active Modules</div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+            <CheckIn />
+            <DepositWithdraw />
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        {/* --- Ecosystem Nodes (3-Column Grid) --- */}
+        <div>
+          <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-2">Ecosystem Directory</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-          {/* 1. Lottery Link */}
-          <MemeCard
-            title="Lottery"
-            emoji="🎰"
-            desc="Join the lottery. Earn real money"
-            link="https://lottery.pui.monster"
-            colorClass='bg-pink-300'
-          />
+            <EcosystemCard 
+              category="DeFi / GameFi"
+              status="LIVE"
+              title="PUIMON Lottery"
+              desc="Test your luck on the blockchain. Enter the decentralized lottery pools and earn real yield."
+              link="https://lottery.pui.monster"
+            />
 
-          {/* 2. NFT Link */}
-          <MemeCard
-            title="Hentai NFT"
-            emoji="🖼️"
-            desc="Totally Free Minting on SUI Chain"
-            link="https://hentai.pui.monster"
-            colorClass='bg-cyan-300'
-          />
+            <EcosystemCard 
+              category="Collectibles"
+              status="MINTING NOW"
+              title="Hentai NFT Drop"
+              desc="Claim your assets. 100% Free Minting executed natively on the SUI Chain."
+              link="https://hentai.pui.monster"
+            />
 
-          {/* 3. Game Link */}
-          <MemeCard
-            title="Game"
-            emoji="🕹️"
-            desc="PVP Battles. MMO Web Game (Coming Soon...)"
-            link="/game"
-            colorClass='bg-orange-300'
-          />
+            <EcosystemCard 
+              category="Gaming Protocol"
+              status="Coming Soon"
+              title="MMO Web Game"
+              desc="PVP Battles and tokenized interactions. The ultimate on-chain gaming experience is currently compiling."
+              link="/game"
+            />
 
+          </div>
         </div>
-      </section>
 
-      {/* --- Footer (Simple & Messy) --- */}
-      <footer className="mt-24 pt-12 pb-12 border-t-4 border-[#1a1a1a] bg-[#1a1a1a] text-white text-center">
-        <div className="max-w-4xl mx-auto px-4">
-          <img src={LOGO_URL} className="w-16 h-16 mx-auto mb-4 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all" />
-          <p className="font-bold text-lg mb-2">BUILT ON SUI</p>
-          <p className="opacity-50 text-sm">
-            $PUIMON is for entertainment only.
-          </p>
+        {/* Embedded DApp Modules */}
+        
+
+        {/* --- Footer --- */}
+        <div className="mt-16 pt-8 border-t border-gray-200 flex flex-col items-center justify-center text-center text-sm text-gray-500 font-medium">
+          <img src={LOGO_URL} className="w-8 h-8 mb-3 grayscale opacity-40" />
+          <p className="mb-1 text-gray-800 font-bold">BUILT ON SUI</p>
+          <p className="text-gray-400 text-xs">$PUIMON is a decentralized experiment for entertainment purposes.</p>
         </div>
-      </footer>
 
+      </div>
     </main>
-    
   );
 }

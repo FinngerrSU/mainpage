@@ -149,75 +149,104 @@ export default function DepositWithdraw() {
     };
 
     return (
+    <div className="flex gap-2 sm:gap-4 mb-4 group w-full">
+      
+      
 
-        <section className="max-w-xl mx-auto px-4 mb-12">
-            <div className="bg-[#F0F6FF] border-4 border-[#1a1a1a] p-8 rounded-3xl shadow-[8px_8px_0px_0px_#1a1a1a]">
-                <h2 className="text-4xl font-black italic tracking-tighter mb-2">PUIMON BANK</h2>
+      {/* Main Vault Card */}
+      <div className="bg-white border border-gray-200 shadow-sm hover:shadow-md rounded-2xl p-5 sm:p-6 w-full max-w-200 transition-all duration-200">
+        
+        {/* Module Metadata Tags */}
+        <div className="flex flex-wrap items-center gap-2 mb-4 text-xs font-bold uppercase tracking-wider">
+          <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-md border border-gray-200">
+            DeFi Protocol
+          </span>
+          <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-md flex items-center gap-1.5">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
+            </span>
+            VAULT ACTIVE
+          </span>
+          <span className="text-gray-400 font-mono lowercase tracking-normal hidden sm:inline ml-auto">
+            // sys::central_vault
+          </span>
+        </div>
 
-                <div className="grid grid-cols-2 gap-4 mb-6">
+        {/* Header */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 tracking-tight mb-1">Central Vault Protocol</h2>
+          <p className="text-sm text-gray-500 font-medium">Manage your $PUIMON liquidity and earn ecosystem yields.</p>
+        </div>
 
-                    <div className="bg-white p-4 border-2 border-[#1a1a1a] rounded-xl">
-                        <p className="text-xs font-bold text-gray-500 uppercase mb-2">Total Vault Value</p>
-                        <div className="flex items-center gap-2">
-                            <p className="text-2xl font-black text-[#4F78EB]">{poolBalance}</p>
-
-                            {/* Logo Unit */}
-                            <div className="w-8 h-8 bg-[#B92B27] border-2 border-[#1a1a1a] rounded-full overflow-hidden flex items-center justify-center shrink-0">
-                                <img
-                                    src={LOGO_URL}
-                                    alt="Logo"
-                                    className="w-full h-full object-cover scale-110"
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* CARD 2: MY DEPOSIT */}
-                    <div className="bg-white p-4 border-2 border-[#1a1a1a] rounded-xl">
-                        <p className="text-xs font-bold text-gray-500 uppercase mb-2">My Deposit</p>
-                        <div className="flex items-center gap-2">
-                            <p className="text-2xl font-black text-[#10D8A6]">
-                                {user_balance === "0" && !account?.address ? "..." : user_balance}
-                            </p>
-
-                            {/* Logo Unit */}
-                            <div className="w-8 h-8 bg-[#B92B27] border-2 border-[#1a1a1a] rounded-full overflow-hidden flex items-center justify-center shrink-0">
-                                <img
-                                    src={LOGO_URL}
-                                    alt="Logo"
-                                    className="w-full h-full object-cover scale-110"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="space-y-4">
-                    <input
-                        type="number"
-                        placeholder="Amount..."
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        className="w-full p-4 bg-white border-4 border-[#1a1a1a] rounded-xl text-xl font-bold focus:outline-none focus:ring-4 ring-[#654FF0]/20"
-                    />
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <button
-                            onClick={deposit}
-                            className="py-4 bg-[#10D8A6] border-4 border-[#1a1a1a] text-xl font-black rounded-xl shadow-[4px_4px_0px_0px_#1a1a1a] hover:translate-y-1 hover:shadow-none transition-all"
-                        >
-                            DEPOSIT
-                        </button>
-                        <button
-                            onClick={withdraw}
-                            className="py-4 bg-[#B92B27] text-white border-4 border-[#1a1a1a] text-xl font-black rounded-xl shadow-[4px_4px_0px_0px_#1a1a1a] hover:translate-y-1 hover:shadow-none transition-all"
-                        >
-                            WITHDRAW
-                        </button>
-                    </div>
-                </div>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          
+          {/* Total Vault Value */}
+          <div className="bg-gray-50 p-4 border border-gray-100 rounded-xl flex flex-col justify-center">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Total Vault Liquidity</p>
+            <div className="flex items-center gap-2">
+              <p className="text-2xl font-mono font-bold text-gray-900">{poolBalance || "0"}</p>
+              <div className="w-6 h-6 rounded-full overflow-hidden border border-gray-200 shrink-0 opacity-80">
+                <img src={LOGO_URL} alt="Logo" className="w-full h-full object-cover" />
+              </div>
             </div>
-        </section>
-    );
+          </div>
+
+          {/* User Deposit */}
+          <div className="bg-blue-50/50 p-4 border border-blue-100 rounded-xl flex flex-col justify-center">
+            <p className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-1">My Active Deposit</p>
+            <div className="flex items-center gap-2">
+              <p className="text-2xl font-mono font-bold text-blue-600">
+                {user_balance === "0" && !account?.address ? "—" : user_balance}
+              </p>
+              <div className="w-6 h-6 rounded-full overflow-hidden border border-blue-200 shrink-0">
+                <img src={LOGO_URL} alt="Logo" className="w-full h-full object-cover" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Interaction Area */}
+        <div className="space-y-4">
+          
+          {/* Input Field */}
+          <div className="relative">
+            <input
+              type="number"
+              placeholder="Enter amount..."
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="w-full p-4 pl-4 pr-16 bg-white border border-gray-200 rounded-xl text-lg font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-300"
+            />
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-gray-400">
+              $PUIMON
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            <button
+              onClick={deposit}
+              className="py-3.5 bg-blue-600 text-white text-sm font-bold rounded-xl shadow-sm hover:bg-blue-700 hover:-translate-y-0.5 hover:shadow-md transition-all flex justify-center items-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+              DEPOSIT
+            </button>
+            <button
+              onClick={withdraw}
+              className="py-3.5 bg-white text-gray-700 border border-gray-200 text-sm font-bold rounded-xl shadow-sm hover:bg-red-50 hover:text-red-600 hover:border-red-200 hover:-translate-y-0.5 transition-all flex justify-center items-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+              WITHDRAW
+            </button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  );
 }
 async function getCoin(suiClient: SuiGrpcClient, owner: string, objectType: string) {
     const response = suiClient.stateService.listOwnedObjects({
