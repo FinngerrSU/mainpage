@@ -61,6 +61,7 @@ export default function Mint({ image_url }: image_url) {
         onSuccess: (result) => {
           alert("Success! Check your wallet for $PUIMON 💎");
           console.log("Check-in result:", result);
+          setStatus("Success!");
         },
         onError: (error) => {
           // If the move contract's 'assert' fails, it hits here
