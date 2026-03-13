@@ -6,7 +6,7 @@ import Mint from './Mint';
 import { GetSpecial } from './getSpecial';
 
 const LOGO_URL = "https://arweave.net/g2Fgf9YlkDv6B4YD0AZPZjcelUCmntk-jVEt28VzJVU";
-export const revalidate = 60000;
+export const revalidate = 120;
 // Adapted from the "Reply" style into an "Ecosystem Node"
 const EcosystemCard = ({ title, desc, link, status, category }: { title: string, desc: string, link: string, status: string, category: string }) => {
   const isLive = status.toLowerCase() !== 'coming soon';
@@ -159,7 +159,7 @@ export default async function Home() {
               category="Collectibles"
               status="MINTING NOW"
               title="Card NFT Drop"
-              desc="Claim your assets. 100% Free Minting executed natively on the SUI Chain."
+              desc="Check daily card history"
               link="https://hentai.pui.monster"
             />
 
