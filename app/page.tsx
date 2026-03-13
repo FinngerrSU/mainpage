@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import CheckIn from './Check_in';
 import DepositWithdraw from './depositWithdraw';
+import Mint from './Mint';
+import { GetSpecial } from './getSpecial';
 
 const LOGO_URL = "https://arweave.net/g2Fgf9YlkDv6B4YD0AZPZjcelUCmntk-jVEt28VzJVU";
 
@@ -49,7 +51,8 @@ export const metadata: Metadata = {
   description: 'Access all PUIMON ecosystem modules here.',
 }
 
-export default function Home() {
+export default async function Home() {
+  const special=await GetSpecial();
   return (
     <main className="min-h-screen bg-[#F8F9FA] text-gray-900 font-sans pb-20 selection:bg-blue-200">
 
@@ -120,9 +123,22 @@ export default function Home() {
         {/* --- Active Modules (Side-by-Side Grid) --- */}
         <div className="mb-8">
           <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-2">Active Modules</div>
+          
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-            <CheckIn />
-            <DepositWithdraw />
+            
+            {/* LEFT COLUMN: CheckIn and Mint stacked vertically */}
+            <div className="flex flex-col gap-6 w-full">
+              <CheckIn />
+              <div className="relative w-full">
+                <Mint image_url={special.image_url} />
+              </div>
+            </div>
+
+            {/* RIGHT COLUMN: DepositWithdraw */}
+            <div className="flex flex-col w-full">
+              <DepositWithdraw />
+            </div>
+
           </div>
         </div>
 
@@ -134,7 +150,7 @@ export default function Home() {
             <EcosystemCard 
               category="DeFi / GameFi"
               status="LIVE"
-              title="PUIMON Lottery"
+              title="Lottery"
               desc="Test your luck on the blockchain. Enter the decentralized lottery pools and earn real yield."
               link="https://lottery.pui.monster"
             />
@@ -142,7 +158,7 @@ export default function Home() {
             <EcosystemCard 
               category="Collectibles"
               status="MINTING NOW"
-              title="Hentai NFT Drop"
+              title="Card NFT Drop"
               desc="Claim your assets. 100% Free Minting executed natively on the SUI Chain."
               link="https://hentai.pui.monster"
             />
