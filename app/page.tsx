@@ -165,10 +165,10 @@ export default async function Home() {
 
             <EcosystemCard 
               category="Gaming Protocol"
-              status="Coming Soon"
+              status="PlAYING NOW"
               title="MMO Web Game"
               desc="PVP Battles and tokenized interactions. The ultimate on-chain gaming experience is currently compiling."
-              link="/game"
+              link="https://game.pui.monster"
             />
 
           </div>
