@@ -13,14 +13,14 @@ export default function CheckIn() {
   const account = useCurrentAccount();
   const connection = useWalletConnection();
 
-  
-  
+
+
 
   const PACKAGE_ID = "0x0fa47f4c79360984701ff9b989944d7dbb568b550e97ad52377b7e7ebbdd9d3f";
   const STATE_OBJECT_ID = "0xd79933edaeea13ef3a7c3a570b07f5fe1bc0235d4fcba3e76195fba41285f0e9";
   const CLOCK_ID = "0x6"; // System clock is always 0x6
   const handleCheckIn = async () => {
-  
+
 
     console.log("Buy clicked! Status:", connection.status, "Account:", account?.address);
     if (connection.status !== "connected" || !account) {
@@ -53,9 +53,9 @@ export default function CheckIn() {
   };
   return (
     <div className="flex gap-2 sm:gap-4 mb-4 group w-full">
-      
+
       {/* System Node Line (Matches the Ecosystem Cards) */}
-      
+
 
       {/* Main Module Card */}
       <div className="bg-white border border-gray-200 shadow-sm hover:shadow-md rounded-2xl p-5 w-full max-w-200transition-all duration-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
@@ -90,25 +90,29 @@ export default function CheckIn() {
         {/* Right Side: The Interactive Panel */}
         <div className="w-full md:w-auto flex flex-col items-center gap-3">
           {!account ? (
-            /* 1. DISCONNECTED */
+            /* 1. DISCONNECTED STATE */
+            /* Replaced the redundant ConnectButton with a disabled placeholder */
             <div className="w-full">
-              <ConnectButton
-                className="w-full sm:w-auto bg-blue-600! text-white! font-bold! text-sm! rounded-xl! border-none! px-8! py-3! hover:bg-blue-700! hover:-translate-y-0.5! transition-all! shadow-sm!"
+              <button
+                disabled
+                className="w-full sm:w-auto bg-gray-100 border border-gray-200 text-gray-400 font-bold text-sm rounded-xl px-8 py-3 cursor-not-allowed shadow-sm"
               >
-                Login-in wallet
-              </ConnectButton>
+                Connect Wallet to Claim
+              </button>
+              <p className="text-[10px] text-gray-400 font-medium tracking-wide text-center mt-2">
+                Please connect via the navigation bar above
+              </p>
             </div>
           ) : (
-            /* 2. CONNECTED */
-            <div className="flex flex-col items-end gap-3 w-full">
-              
-              {/* THE ACTUAL CLAIM BUTTON */}
+            /* 2. CONNECTED STATE */
+            /* Removed the tiny wallet menu, leaving only the primary action */
+            <div className="w-full flex flex-col items-center sm:items-end gap-2">
               <button
                 onClick={handleCheckIn}
                 disabled={isPending}
                 className={`
-                  w-full sm:w-auto px-8 py-3 text-sm font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2
-                  ${isPending
+                    w-full sm:w-auto px-8 py-3 text-sm font-bold rounded-xl shadow-sm transition-all flex items-center justify-center gap-2
+                    ${isPending
                     ? 'bg-gray-50 text-gray-400 border border-gray-200 cursor-not-allowed shadow-none'
                     : 'bg-emerald-600 text-white hover:bg-emerald-700 hover:-translate-y-0.5 hover:shadow-md'
                   }
@@ -124,16 +128,10 @@ export default function CheckIn() {
                 )}
               </button>
 
-              {/* Minimal ConnectButton for Wallet/Address Menu */}
-              <div className="w-full sm:w-auto flex flex-col items-end gap-1 text-right">
-                <ConnectButton
-                  className="bg-gray-50! text-gray-600! font-mono! text-xs! font-medium! rounded-lg! border! border-gray-200! px-3! py-1.5! hover:bg-gray-100! transition-all! shadow-none!"
-                />
-                <p className="text-[10px] text-gray-400 font-medium tracking-wide">
-                  Click address to manage session
-                </p>
-              </div>
-
+              {/* Optional context text since we removed the address text */}
+              <p className="text-[10px] text-emerald-600/70 font-medium tracking-wide">
+                Ready to execute transaction
+              </p>
             </div>
           )}
         </div>

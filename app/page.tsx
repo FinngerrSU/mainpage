@@ -4,6 +4,9 @@ import CheckIn from './Check_in';
 import DepositWithdraw from './depositWithdraw';
 import Mint from './Mint';
 import { GetSpecial } from './getSpecial';
+import CreatePost from './Post/postFunction';
+import PostFeed from './Post/PostShow';
+import ConnectWalletBtn from './Wallet';
 
 const LOGO_URL = "https://arweave.net/g2Fgf9YlkDv6B4YD0AZPZjcelUCmntk-jVEt28VzJVU";
 export const revalidate = 120;
@@ -13,7 +16,7 @@ const EcosystemCard = ({ title, desc, link, status, category }: { title: string,
 
   return (
     <div className="bg-white border border-gray-200 shadow-sm hover:shadow-md rounded-2xl p-5 flex flex-col h-full transition-all duration-200 group">
-      
+
       {/* Module Metadata */}
       <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
         <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-md border border-gray-200 text-[10px] font-bold uppercase tracking-wider">
@@ -29,7 +32,7 @@ const EcosystemCard = ({ title, desc, link, status, category }: { title: string,
         <h3 className="font-bold text-lg mb-2 text-gray-900 tracking-tight">{title}</h3>
         <p className="mb-6 text-gray-500 font-mono text-xs leading-relaxed">{desc}</p>
       </div>
-      
+
       {/* Modern Action Button (Pushed to bottom) */}
       <div className="mt-auto">
         {link.startsWith('http') ? (
@@ -52,39 +55,67 @@ export const metadata: Metadata = {
 }
 
 export default async function Home() {
-  const special=await GetSpecial();
+  const special = await GetSpecial();
   return (
     <main className="min-h-screen bg-[#F8F9FA] text-gray-900 font-sans pb-20 selection:bg-blue-200">
 
       {/* --- System Navbar --- */}
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200 shadow-xs">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-200">
+
+          {/* Left Side: Brand & Engine Badge */}
+          <div className="flex items-center gap-3 sm:gap-4">
+
+            {/* Logo */}
+            <div className="w-8 h-8 rounded-full overflow-hidden border border-gray-200 shadow-sm shrink-0">
               <img src={LOGO_URL} alt="PUIMON" className="w-full h-full object-cover" />
             </div>
-            <span className="font-black text-xl tracking-tight text-gray-900">PUIMON</span>
+
+            {/* Typography Grouping */}
+            <div className="flex items-baseline gap-2 sm:gap-3">
+              <span className="font-black text-xl tracking-tight text-gray-900">
+                PUI BBS
+              </span>
+
+              {/* SuiBoard Technical Tag */}
+              <span className="hidden sm:inline-flex items-center px-2 py-0.5 rounded-md bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider border border-blue-100">
+                SuiBoard Engine
+              </span>
+            </div>
+
           </div>
-          <a
-            href="https://docs.pui.monster"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm font-bold text-gray-500 hover:text-gray-900 transition-colors"
-          >
-            Documentation
-          </a>
+
+          {/* Right Side: Links & Wallet */}
+          <div className="flex items-center gap-4 sm:gap-6">
+
+            <a
+              href="https://docs.pui.monster"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors hidden sm:block"
+            >
+              Documentation
+            </a>
+
+            {/* Clean vertical divider between links and the interactive wallet button */}
+            <div className="hidden sm:block w-px h-5 bg-gray-200"></div>
+
+            <ConnectWalletBtn />
+
+          </div>
+
         </div>
       </nav>
 
       <div className="max-w-5xl mx-auto px-4 pt-8">
-        
-        
+
+
         {/* --- Core Overview (Hero Section) --- */}
         <div className="bg-white border border-gray-200 shadow-sm rounded-2xl p-4 sm:p-6 mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          
+
           {/* Left: System Status & Title */}
           <div className="flex flex-col gap-2 w-full sm:w-auto">
-            
+
             {/* Status Indicators */}
             <div className="flex flex-wrap items-center gap-2 text-xs font-medium">
               <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-md font-bold uppercase tracking-wide">
@@ -117,15 +148,15 @@ export default async function Home() {
             Buy on Cetus DEX
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
           </a>
-          
+
         </div>
 
         {/* --- Active Modules (Side-by-Side Grid) --- */}
         <div className="mb-8">
           <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-2">Active Modules</div>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-            
+
             {/* LEFT COLUMN: CheckIn and Mint stacked vertically */}
             <div className="flex flex-col gap-6 w-full">
               <CheckIn />
@@ -141,13 +172,14 @@ export default async function Home() {
 
           </div>
         </div>
-
+        <CreatePost />
+        <PostFeed />
         {/* --- Ecosystem Nodes (3-Column Grid) --- */}
         <div>
           <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-2">Ecosystem Directory</div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-            <EcosystemCard 
+            <EcosystemCard
               category="DeFi / GameFi"
               status="LIVE"
               title="Lottery"
@@ -155,7 +187,7 @@ export default async function Home() {
               link="https://lottery.pui.monster"
             />
 
-            <EcosystemCard 
+            <EcosystemCard
               category="Collectibles"
               status="MINTING NOW"
               title="Card NFT Drop"
@@ -163,7 +195,7 @@ export default async function Home() {
               link="https://hentai.pui.monster"
             />
 
-            <EcosystemCard 
+            <EcosystemCard
               category="Gaming Protocol"
               status="PlAYING NOW"
               title="MMO Web Game"
@@ -175,7 +207,7 @@ export default async function Home() {
         </div>
 
         {/* Embedded DApp Modules */}
-        
+
 
         {/* --- Footer --- */}
         <div className="mt-16 pt-8 border-t border-gray-200 flex flex-col items-center justify-center text-center text-sm text-gray-500 font-medium">
