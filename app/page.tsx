@@ -172,8 +172,8 @@ export default async function Home() {
 
           </div>
         </div>
-        <CreatePost />
         <PostFeed />
+        <CreatePost />
         {/* --- Ecosystem Nodes (3-Column Grid) --- */}
         <div>
           <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-2">Ecosystem Directory</div>

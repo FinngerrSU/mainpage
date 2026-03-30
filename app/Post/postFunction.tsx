@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { UiWalletAccount, useWalletConnection } from '@mysten/dapp-kit-react';
+import {  useWalletConnection } from '@mysten/dapp-kit-react';
 import { useCurrentAccount, useDAppKit } from '@mysten/dapp-kit-react';
 import { Transaction } from '@mysten/sui/transactions';
 
@@ -23,9 +23,9 @@ export default function CreatePost() {
     // Replace this with the Package ID you got when publishing your contract
     const PACKAGE_ID = '0x0ce1729516456933aed62ff002752a32fcd87732e95913e064b6848419031c66';
 
-    const handlePostSubmit = async () => {
-
-
+    const handlePostSubmit = async (e: React.SyntheticEvent) => {
+        
+        e.preventDefault();
         // 2. Your connection and account validation
         if (connection.status !== "connected" || !account) {
             alert("Cannot post - wallet not connected or no account");
