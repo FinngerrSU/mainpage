@@ -241,7 +241,7 @@ export default function PostFeed() {
                                     <img
                                         src={post.imageUrl}
                                         alt="Post attachment"
-                                        className="w-full max-h-96 object-cover"
+                                        className="w-full max-h-96 object-contain"
                                         loading="lazy"
                                     />
                                 </div>
