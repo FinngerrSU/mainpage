@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
-import CheckIn from './Check_in';
-import DepositWithdraw from './depositWithdraw';
+
 import Mint from './Mint';
 import { GetSpecial } from './getSpecial';
 import CreatePost from './Post/postFunction';
@@ -155,20 +154,16 @@ export default async function Home() {
         <div className="mb-8">
           <div className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 ml-2">Active Modules</div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
-
+          <div className="flex flex-col gap-6 w-full max-w-xl justify-center mx-auto">
             {/* LEFT COLUMN: CheckIn and Mint stacked vertically */}
-            <div className="flex flex-col gap-6 w-full">
-              <CheckIn />
-              <div className="relative w-full">
+           
+
+              <div className="relative w-full justify-center">
                 <Mint image_url={special.image_url} />
               </div>
-            </div>
+           
 
-            {/* RIGHT COLUMN: DepositWithdraw */}
-            <div className="flex flex-col w-full">
-              <DepositWithdraw />
-            </div>
+
 
           </div>
         </div>
