@@ -66,46 +66,49 @@ export default function CreatePost() {
     
 
     return (
-        <div className="max-w-md mx-auto bg-white border border-gray-200 shadow-sm rounded-2xl p-6 mb-8">
-            <div className="flex items-center gap-2 mb-4">
-                <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide">
-                    Publish
-                </span>
-                <h2 className="text-lg font-bold text-gray-900 tracking-tight">
-                    Create a New Post
-                </h2>
-            </div>
+        <div className="max-w-md mx-auto bg-neutral-900 border border-neutral-800 shadow-xl shadow-black/40 rounded-2xl p-6 mb-8 relative group overflow-hidden">
+    {/* Subtle top gradient accent */}
+    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-cyan-500 opacity-50"></div>
 
-            <form onSubmit={handlePostSubmit} className="space-y-4">
-                <div>
-                    <textarea
-                        required
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        placeholder="What's on your mind?"
-                        className="w-full p-3 rounded-xl bg-[#F8F9FA] border border-gray-200 text-gray-900 placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition-colors"
-                        rows={4}
-                    />
-                </div>
+    <div className="flex items-center gap-2 mb-4">
+        <span className="bg-blue-900/30 text-blue-400 border border-blue-800/50 px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide">
+            Publish
+        </span>
+        <h2 className="text-lg font-bold text-neutral-100 tracking-tight">
+            Create a New Post
+        </h2>
+    </div>
 
-                <div>
-                    <input
-                        type="url"
-                        value={imageUrl}
-                        onChange={(e) => setImageUrl(e.target.value)}
-                        placeholder="Optional Image URL (e.g., https://...)"
-                        className="w-full p-3 rounded-xl bg-[#F8F9FA] border border-gray-200 text-gray-900 placeholder-gray-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-400 transition-colors"
-                    />
-                </div>
-
-                <button
-                    type="submit"
-                    disabled={isSubmitting || !account}
-                    className="w-full py-3 px-4 bg-gray-900 hover:bg-gray-800 text-white font-bold rounded-xl disabled:opacity-50 transition-colors shadow-sm"
-                >
-                    {isSubmitting ? 'Posting to Network...' : 'Publish Post'}
-                </button>
-            </form>
+    <form onSubmit={handlePostSubmit} className="space-y-4 relative z-10">
+        <div>
+            <textarea
+                required
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="What's on your mind?"
+                className="w-full p-3 rounded-xl bg-neutral-950 border border-neutral-800 text-neutral-100 placeholder-neutral-600 focus:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors resize-none"
+                rows={4}
+            />
         </div>
+
+        <div>
+            <input
+                type="url"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                placeholder="Optional Image URL (e.g., https://...)"
+                className="w-full p-3 rounded-xl bg-neutral-950 border border-neutral-800 text-neutral-100 placeholder-neutral-600 focus:bg-neutral-900 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors"
+            />
+        </div>
+
+        <button
+            type="submit"
+            disabled={isSubmitting || !account}
+            className="w-full py-3 px-4 bg-neutral-100 hover:bg-neutral-300 text-neutral-900 font-bold rounded-xl disabled:opacity-50 transition-colors shadow-sm"
+        >
+            {isSubmitting ? 'Posting to Network...' : 'Publish Post'}
+        </button>
+    </form>
+</div>
     );
 }
