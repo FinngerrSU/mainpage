@@ -3,7 +3,7 @@ import ConnectWalletBtn from './Wallet';
 import CreatePost from './Post/postFunction';
 import PostFeed from './Post/PostShow';
 // Array-based structure makes it trivial to add "more things later"
-import WrapeedData from './data/wrapped';
+import WrappedData from './data/wrapped';
 
 export default function Home() {
   return (
@@ -22,7 +22,7 @@ export default function Home() {
           PUIMON
         </h1>
       </div>
-      <WrapeedData />
+      <WrappedData />
 
       <CreatePost />
       <PostFeed />
