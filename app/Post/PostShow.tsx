@@ -182,146 +182,135 @@ export default function PostFeed() {
     }
 
     return (
-        <div className="max-w-2xl mx-auto space-y-6 mt-8 pb-12">
-    <div className="flex items-center gap-2 mb-2 px-2">
-        <span className="bg-emerald-900/30 text-emerald-400 border border-emerald-800/50 px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide">
-            Live Feed
-        </span>
-        <span className="text-neutral-500 text-sm font-medium">
-            {posts?.length || 0} Posts Found
-        </span>
-    </div>
+        <div className="max-w-3xl mx-auto mt-8 pb-12 px-4">
+            {/* --- BRIEFING HEADER --- */}
+            <div className="flex items-end justify-between border-b border-neutral-800 pb-4 mb-8">
+                <div>
+                    <h1 className="text-xl font-bold tracking-tighter text-neutral-100 uppercase italic">
+                        Daily Briefing <span className="text-emerald-500">.01 room</span>
+                    </h1>
+                    <p className="text-xs font-mono text-neutral-500 uppercase tracking-widest">
+                        System Status: Synced 
+                    </p>
+                </div>
+                <div className="text-right">
+                    <span className="text-[10px] font-mono block leading-none">
+                        LATENCY: 24MS
+                    </span>
+                    <span className="text-[10px] font-mono block">
+                        {new Date().toLocaleDateString()}
+                    </span>
+                </div>
+            </div>
 
-    {mainPosts.length === 0 ? (
-        <div className="bg-neutral-900 border border-neutral-800 border-dashed rounded-2xl p-8 text-center text-neutral-600">
-            No active nodes found. Be the first to publish.
-        </div>
-    ) : (
-        mainPosts.map((post) => (
-            <div key={post.id} className="mb-8 group/post"> 
+            {mainPosts.length === 0 ? (
+                <div className="bg-neutral-950 border border-neutral-900 rounded-lg p-12 text-center text-neutral-600 font-mono text-sm">
+                    NO ACTIVE INTELLIGENCE FOUND_
+                </div>
+            ) : (
+                <div className="space-y-0 border-l border-neutral-800 ml-3">
+                    {mainPosts.map((post) => (
+                        <div key={post.id} className="relative pl-8 pb-10 group/post">
+                            {/* Timeline Node Icon */}
+                            <div className="absolute -left-[5px] top-1 w-2 h-2 rounded-full bg-neutral-800 border border-neutral-700 group-hover/post:bg-emerald-500 transition-colors" />
 
-                {/* --- THE MAIN POST CARD --- */}
-                <div className="bg-neutral-900 border border-neutral-800 hover:border-neutral-700 shadow-lg shadow-black/20 rounded-2xl p-5 transition-all relative z-10">
-                    <div className="flex items-center gap-3 mb-4">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-900 to-indigo-900 border border-neutral-700 flex items-center justify-center shrink-0">
-                            <span className="text-blue-300 font-bold text-sm">
-                                {post.author.slice(2, 6).toUpperCase()}
-                            </span>
-                        </div>
-                        <div className="flex-1">
-                            <div className="text-sm font-bold text-neutral-100">
-                                {formatAddress(post.author)}
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <span className="text-neutral-500 font-medium text-xs">
-                                    {formatTimeAgo(post.timestamp)}
+                            {/* --- ENTRY HEADER --- */}
+                            <div className="flex items-center gap-3 mb-2">
+                                {/* Removed the .slice(-4) so the full formatted ID remains intact */}
+                                <span className="text-xs font-mono font-bold text-emerald-500/80 bg-emerald-500/5 px-1.5 py-0.5 rounded">
+                                    ENTRY_{formatAddress(post.id)}
                                 </span>
-                                <span className="text-neutral-700 text-xs">•</span>
-                                <div className="text-xs text-neutral-500 font-mono">
-                                    id: {formatAddress(post.id)}
-                                </div>
+                                <span className="text-[11px] font-mono text-neutral-300 italic">
+                                    [{formatTimeAgo(post.timestamp)}]
+                                </span>
+                                <span className="text-[11px] font-mono text-neutral-700">
+                                    BY: {formatAddress(post.author)}
+                                </span>
+
+                                {account?.address === post.author && (
+                                    <button
+                                        onClick={() => handleDeletePost(post.id)}
+                                        className="ml-auto opacity-0 group-hover/post:opacity-100 text-[10px] font-bold text-red-500/60 hover:text-red-400 transition-all uppercase tracking-tighter"
+                                    >
+                                        [ Purge ]
+                                    </button>
+                                )}
                             </div>
-                        </div>
-                        
-                        {/* Delete Button moved to top right of post for better alignment */}
-                        {account?.address === post.author && (
-                            <button
-                                onClick={() => handleDeletePost(post.id)}
-                                disabled={isPending}
-                                className="text-xs font-bold text-red-400 hover:text-red-300 bg-red-900/20 hover:bg-red-900/40 border border-red-900/50 px-3 py-1.5 rounded-lg transition-colors"
-                            >
-                                {isPending ? 'Purging...' : 'Delete'}
-                            </button>
-                        )}
-                    </div>
 
-                    <div className="text-neutral-300 whitespace-pre-wrap leading-relaxed mb-3">
-                        {post.cleanContent}
-                    </div>
+                            {/* --- CONTENT AREA --- */}
+                            <div className="text-neutral-100 text-lg leading-relaxed max-w-xl">
+                                {post.cleanContent}
+                            </div>
 
-                    {post.imageUrl && (
-                        <div className="mt-3 rounded-xl overflow-hidden border border-neutral-800 bg-neutral-950">
-                            <img
-                                src={post.imageUrl}
-                                alt="Post attachment"
-                                className="w-full max-h-96 object-contain"
-                                loading="lazy"
-                            />
-                        </div>
-                    )}
+                            {post.imageUrl && (
+                                <div className="mt-4 max-w-md rounded-sm overflow-hidden border border-neutral-800 transition-all duration-500">
+                                    <img
+                                        src={post.imageUrl}
+                                        alt="Briefing attachment"
+                                        className="w-full h-auto"
+                                        loading="lazy"
+                                    />
+                                </div>
+                            )}
 
-                    {/* Reply Action Area */}
-                    <div className="mt-4 pt-4 border-t border-neutral-800 flex items-center justify-between">
-                        <button
-                            onClick={() => setActiveReplyId(activeReplyId === post.id ? null : post.id)}
-                            className="text-sm font-bold text-neutral-500 hover:text-neutral-300 transition-colors flex items-center gap-2"
-                        >
-                            {activeReplyId === post.id ? 'Cancel Protocol' : 'Initialize Reply 💬'}
-                        </button>
-                    </div>
-
-                    {/* Reply Input Box */}
-                    {activeReplyId === post.id && (
-                        <div className="mt-4 bg-neutral-950 border border-neutral-800 rounded-xl p-4">
-                            <textarea
-                                value={replyText}
-                                onChange={(e) => setReplyText(e.target.value)}
-                                placeholder="Transmit your response..."
-                                className="w-full p-3 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-100 placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-colors mb-3 resize-none"
-                                rows={2}
-                            />
-                            <div className="flex justify-end">
+                            {/* --- ACTION BAR (Minimalist) --- */}
+                            <div className="mt-3 flex items-center gap-4">
                                 <button
-                                    onClick={() => handleSubmitReply(post.id)}
-                                    disabled={isPending || !replyText.trim()}
-                                    className="px-4 py-2 bg-neutral-100 hover:bg-neutral-300 text-neutral-900 text-sm font-bold rounded-xl disabled:opacity-50 transition-colors shadow-sm"
+                                    onClick={() => setActiveReplyId(activeReplyId === post.id ? null : post.id)}
+                                    className="text-[10px] font-mono font-bold text-neutral-500 hover:text-emerald-400 uppercase tracking-widest transition-colors"
                                 >
-                                    {isPending ? 'Transmitting...' : 'Post Reply'}
+                                    {activeReplyId === post.id ? '> CANCEL_INTEL' : '> ADD_INTEL'}
                                 </button>
                             </div>
-                        </div>
-                    )}
-                </div>
 
-                {/* --- THE REPLIES SECTION --- */}
-                {repliesByParent[post.id] && repliesByParent[post.id].length > 0 && (
-                    <div className="ml-4 sm:ml-8 mt-4 space-y-3 border-l-2 border-neutral-800 pl-4 relative">
-                        {repliesByParent[post.id].map((reply) => (
-                            <div key={reply.id} className="bg-neutral-900/50 border border-neutral-800 rounded-xl p-4 shadow-sm hover:border-neutral-700 transition-colors">
-
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-xs font-bold text-neutral-300">
-                                            {formatAddress(reply.author)}
-                                        </span>
-                                        <span className="text-neutral-600 text-xs font-medium">
-                                            {formatTimeAgo(reply.timestamp)}
-                                        </span>
-                                    </div>
-
-                                    {account?.address === reply.author && (
+                            {/* Reply Input Box */}
+                            {activeReplyId === post.id && (
+                                <div className="mt-4 bg-neutral-950 border-l-2 border-emerald-500/30 p-4 max-w-lg">
+                                    <textarea
+                                        value={replyText}
+                                        onChange={(e) => setReplyText(e.target.value)}
+                                        placeholder="Input additional data..."
+                                        className="w-full bg-transparent text-neutral-200 text-sm focus:outline-none placeholder-neutral-700 resize-none font-mono"
+                                        rows={3}
+                                    />
+                                    <div className="flex justify-end mt-2">
                                         <button
-                                            onClick={() => handleDeletePost(reply.id)}
-                                            disabled={isPending}
-                                            className="text-[10px] font-bold text-red-500 hover:text-red-400 transition-colors bg-red-900/10 px-2 py-1 rounded"
+                                            onClick={() => handleSubmitReply(post.id)}
+                                            className="text-[10px] font-bold bg-neutral-200 text-neutral-900 px-3 py-1 hover:bg-emerald-400 transition-colors uppercase"
                                         >
-                                            Delete
+                                            Transmit
                                         </button>
-                                    )}
+                                    </div>
                                 </div>
+                            )}
 
-                                <div className="text-sm text-neutral-400 whitespace-pre-wrap">
-                                    {reply.cleanContent}
+                            {/* --- REPLIES (Sub-logs) --- */}
+                            {repliesByParent[post.id] && repliesByParent[post.id].length > 0 && (
+                                <div className="mt-4 space-y-4 border-l border-neutral-800/50 ml-2">
+                                    {repliesByParent[post.id].map((reply) => (
+                                        <div key={reply.id} className="pl-6 relative">
+                                            {/* Small sub-node connector */}
+                                            <div className="absolute left-0 top-2 w-3 h-[1px] bg-neutral-800" />
+
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <span className="text-[10px] font-mono text-neutral-600">
+                                                    SUPP_{formatAddress(reply.author).slice(-4)}
+                                                </span>
+                                                <span className="text-[10px] font-mono text-neutral-700 italic">
+                                                    {formatTimeAgo(reply.timestamp)}
+                                                </span>
+                                            </div>
+                                            <div className="text-neutral-500 text-xs border-l border-neutral-800 pl-3">
+                                                {reply.cleanContent}
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-                {/* --------------------------- */}
-
-            </div>
-        ))
-    )}
-</div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
     );
 }
