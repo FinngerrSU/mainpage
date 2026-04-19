@@ -3,7 +3,7 @@ import ConnectWalletBtn from './Wallet';
 import CreatePost from './Post/postFunction';
 import PostFeed from './Post/PostShow';
 // Array-based structure makes it trivial to add "more things later"
-import DataCenterCards from './data/page';
+import WrapeedData from './data/wrapped';
 
 export default function Home() {
   return (
@@ -18,11 +18,11 @@ export default function Home() {
 
       {/* Hero Section */}
       <div className="max-w-3xl text-center mb-16 space-y-4">
-        <h1 className="text-5xl md:text-6xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 drop-shadow-[0_0_25px_rgba(34,211,238,0.4)]">
+        <h1 className="text-5xl md:text-6xl font-black tracking-widest text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-cyan-300 drop-shadow-[0_0_25px_rgba(34,211,238,0.4)]">
           PUIMON
         </h1>
       </div>
-      <DataCenterCards />
+      <WrapeedData />
 
       <CreatePost />
       <PostFeed />
