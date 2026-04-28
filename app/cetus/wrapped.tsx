@@ -1,10 +1,11 @@
 'use client';
-import DataCenterCards from './page';
+import CreateCetusPool from './examle';
+import CryptoConverter from './calculation';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 
-export default function WrappedData() {
+export default function WrappedCetus() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -17,7 +18,7 @@ export default function WrappedData() {
         <div className="flex flex-col items-start">
           
           <span className="text-xl font-bold bg-linear-to-r from-white to-neutral-400 bg-clip-text text-transparent">
-            DATA CENTER
+            DEX TOOL
           </span>
         </div>
 
@@ -42,7 +43,8 @@ export default function WrappedData() {
           >
             {/* 3. Your Existing Card Content goes inside here */}
             <div className="pt-6">
-              <DataCenterCards />
+              <CreateCetusPool />
+              <CryptoConverter/>
             </div>
           </motion.div>
         )}

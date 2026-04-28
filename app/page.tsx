@@ -4,6 +4,7 @@ import CreatePost from './Post/postFunction';
 import PostFeed from './Post/PostShow';
 // Array-based structure makes it trivial to add "more things later"
 import WrappedData from './data/wrapped';
+import WrappedCetus from './cetus/wrapped';
 
 export default function Home() {
   return (
@@ -23,7 +24,7 @@ export default function Home() {
         </h1>
       </div>
       <WrappedData />
-
+      <WrappedCetus/>
       <CreatePost />
       <PostFeed />
     </main>
