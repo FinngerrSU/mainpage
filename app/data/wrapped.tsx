@@ -1,5 +1,5 @@
 'use client';
-import DataCenterCards from './page';
+import DataCenterCards from './datapage';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
