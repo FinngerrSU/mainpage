@@ -5,6 +5,7 @@ import PostFeed from './Post/PostShow';
 // Array-based structure makes it trivial to add "more things later"
 import WrappedData from './data/wrapped';
 import WrappedCetus from './cetus/wrapped';
+import WrappedGame from './Game/wrapped';
 
 export default function Home() {
   return (
@@ -25,6 +26,7 @@ export default function Home() {
       </div>
       <WrappedData />
       <WrappedCetus/>
+      <WrappedGame/>
       <CreatePost />
       <PostFeed />
     </main>
