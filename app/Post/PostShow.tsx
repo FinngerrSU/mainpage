@@ -238,7 +238,7 @@ export default function PostFeed() {
                             </div>
 
                             {/* --- CONTENT AREA --- */}
-                            <div className="text-neutral-100 text-lg leading-relaxed max-w-xl">
+                            <div className="text-neutral-100 text-lg leading-relaxed max-w-xl whitespace-pre-wrap">
                                 {post.cleanContent}
                             </div>
 

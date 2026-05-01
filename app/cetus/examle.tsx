@@ -33,7 +33,7 @@ export default function CreateCetusPool() {
 
     const [tickSpacing, setTickSpacing] = useState('60');
 
-
+    
     const handlePoolSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault();
 
