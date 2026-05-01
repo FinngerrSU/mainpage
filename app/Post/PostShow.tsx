@@ -212,7 +212,7 @@ export default function PostFeed() {
                     {mainPosts.map((post) => (
                         <div key={post.id} className="relative pl-8 pb-10 group/post">
                             {/* Timeline Node Icon */}
-                            <div className="absolute -left-[5px] top-1 w-2 h-2 rounded-full bg-neutral-800 border border-neutral-700 group-hover/post:bg-emerald-500 transition-colors" />
+                            <div className="absolute -left-1.25 top-1 w-2 h-2 rounded-full bg-neutral-800 border border-neutral-700 group-hover/post:bg-emerald-500 transition-colors" />
 
                             {/* --- ENTRY HEADER --- */}
                             <div className="flex items-center gap-3 mb-2">
@@ -290,7 +290,7 @@ export default function PostFeed() {
                                     {repliesByParent[post.id].map((reply) => (
                                         <div key={reply.id} className="pl-6 relative">
                                             {/* Small sub-node connector */}
-                                            <div className="absolute left-0 top-2 w-3 h-[1px] bg-neutral-800" />
+                                            <div className="absolute left-0 top-2 w-3 h-1px bg-neutral-800" />
 
                                             <div className="flex items-center gap-2 mb-1">
                                                 <span className="text-[10px] font-mono text-neutral-600">

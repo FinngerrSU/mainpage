@@ -68,7 +68,7 @@ export default function CreatePost() {
     return (
         <div className="max-w-md mx-auto bg-neutral-900 border border-neutral-800 shadow-xl shadow-black/40 rounded-2xl p-6 mb-8 relative group overflow-hidden">
     {/* Subtle top gradient accent */}
-    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-cyan-500 opacity-50"></div>
+    <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-blue-600 to-cyan-500 opacity-50"></div>
 
     <div className="flex items-center gap-2 mb-4">
         <span className="bg-blue-900/30 text-blue-400 border border-blue-800/50 px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide">
