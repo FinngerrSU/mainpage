@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { TradeAndRewards } from './TradeAndRewards';
 import ConnectWalletBtn from './Wallet';
 import CreatePost from './Post/postFunction';
 import PostFeed from './Post/PostShow';
@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-50 p-8 md:p-16 flex flex-col items-center justify-center font-sans">
 
-
+      
       <div className="absolute top-6 right-6 md:top-8 md:right-8 z-50 flex items-center gap-4 sm:gap-6">
         {/* Replace the button below with your actual <ConnectWalletBtn /> */}
         <ConnectWalletBtn />
@@ -24,6 +24,7 @@ export default function Home() {
           PUIMON
         </h1>
       </div>
+      <TradeAndRewards/>
       <WrappedData />
       <WrappedCetus/>
       <WrappedGame/>
