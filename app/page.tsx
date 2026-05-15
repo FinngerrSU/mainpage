@@ -6,7 +6,7 @@ import PostFeed from './Post/PostShow';
 import WrappedData from './data/wrapped';
 import WrappedCetus from './cetus/wrapped';
 import WrappedGame from './Game/wrapped';
-
+import {BulletinBoard} from './board';
 export default function Home() {
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-50 p-8 md:p-16 flex flex-col items-center justify-center font-sans">
@@ -24,7 +24,7 @@ export default function Home() {
           PUIMON
         </h1>
       </div>
-      <TradeAndRewards/>
+      <BulletinBoard/>
       <WrappedData />
       <WrappedCetus/>
       <WrappedGame/>

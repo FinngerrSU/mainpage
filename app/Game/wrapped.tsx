@@ -1,12 +1,33 @@
 'use client';
-
-import { useState } from 'react';
+import GetGameList from './GetGameList';
+import { useState,useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
-
+import { GameGrid,GameItem } from './GameList';
 export default function WrappedGame() {
   const [isOpen, setIsOpen] = useState(false);
+  const [games, setGames] = useState<GameItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    // Define the async function inside the effect
+    const fetchGames = async () => {
+      try {
+        const list = await GetGameList();
+        setGames(list);
+      } catch (error) {
+        console.error("Failed to fetch games:", error);
+      } finally {
+        setLoading(false); // Stop loading skeleton once done
+      }
+    };
+
+    // Call it immediately
+    fetchGames();
+  }, []); // Empty dependency array means this runs once on mount
+
+  // Replace your 'mounted' check with this loading state
+  if (loading) return <div className="loading-skeleton h-screen w-full bg-stone-950" />;
   return (
     <div className="w-full max-w-7xl mb-8">
       {/* 1. The Trigger Button (This is what the user clicks) */}
@@ -42,7 +63,7 @@ export default function WrappedGame() {
           >
             {/* 3. Your Existing Card Content goes inside here */}
             <div className="pt-6">
-             
+             <GameGrid games={games} />
             </div>
           </motion.div>
         )}
