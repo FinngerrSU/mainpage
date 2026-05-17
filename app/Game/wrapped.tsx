@@ -38,7 +38,7 @@ export default function WrappedGame() {
         <div className="flex flex-col items-start">
           
           <span className="text-xl font-bold bg-linear-to-r from-white to-neutral-400 bg-clip-text text-transparent">
-            GAME CENTER
+            Hentai CENTER
           </span>
         </div>
 
