@@ -155,7 +155,13 @@ function GamePanel({ game, onClose }: GamePanelProps) {
     const lines = game.description.split('\n');
 
     // 2. Identify the last two lines and the rest of the body
-    const mainBody = lines.slice(0, -2).join('\n');
+    const reviewLine = lines.find(line => line.includes("Webmaster's Review"));
+
+    // Filter it out of the main body
+    const mainBody = lines
+        .slice(0, -2)
+        .filter(line => !line.includes("Webmaster's Review"))
+        .join('\n');
     const importantLines = lines.slice(-2);
 
     return (
@@ -221,11 +227,20 @@ function GamePanel({ game, onClose }: GamePanelProps) {
                         {game.name}
                     </h2>
 
-                    <div className="flex-grow">
+                    <div className="grow">
                         <h4 className="font-serif font-bold text-lg text-stone-800 mb-2">About this game</h4>
+
+                        {/* Main Body (excluding review and last two lines) */}
                         <p className="font-serif text-stone-700 whitespace-pre-wrap leading-relaxed">
                             {mainBody}
                         </p>
+
+                        {/* Webmaster's Review Line */}
+                        {reviewLine && (
+                            <p className="font-serif text-blue-700 font-semibold whitespace-pre-wrap mt-2">
+                                {reviewLine}
+                            </p>
+                        )}
 
                         {/* Emphasized Last Two Lines */}
                         <div className="mt-4 flex flex-col gap-1">
