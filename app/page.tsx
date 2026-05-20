@@ -1,6 +1,6 @@
 import { TradeAndRewards } from './TradeAndRewards';
 import ConnectWalletBtn from './Wallet';
-import CreatePost from './Post/postFunction';
+
 import PostFeed from './Post/PostShow';
 // Array-based structure makes it trivial to add "more things later"
 import WrappedData from './data/wrapped';
@@ -28,7 +28,7 @@ export default function Home() {
       <WrappedData />
       <WrappedCetus/>
       <WrappedGame/>
-      <CreatePost />
+      
       <PostFeed />
     </main>
   );

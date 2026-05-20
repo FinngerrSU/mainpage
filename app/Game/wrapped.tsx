@@ -29,45 +29,38 @@ export default function WrappedGame() {
   // Replace your 'mounted' check with this loading state
   if (loading) return <div className="loading-skeleton h-screen w-full bg-stone-950" />;
   return (
-    <div className="w-full max-w-7xl mb-8">
-      {/* 1. The Trigger Button (This is what the user clicks) */}
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full group flex items-center justify-between p-4 bg-neutral-900 border border-neutral-800 rounded-xl hover:border-blue-500/50 transition-all"
-      >
-        <div className="flex flex-col items-start">
+  <section className="w-full max-w-7xl mx-auto my-12 relative">
+    {/* Background Glow Effect to make the component pop from the page */}
+    <div className="absolute inset-0 bg-blue-500/5 blur-[100px] -z-10 rounded-full pointer-events-none" />
+
+    {/* The Main Component Container */}
+    <div className="relative bg-neutral-950 border border-neutral-800/80 rounded-3xl shadow-2xl ring-1 ring-white/5 overflow-hidden">
+      
+      {/* Component Header / Control Bar */}
+      <header className="px-2 py-3 bg-neutral-900/50 backdrop-blur-md border-b border-neutral-800/80 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          {/* Visual Anchor (Blue Accent Line) */}
+          <div className="w-1.5 h-6 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
           
-          <span className="text-xl font-bold bg-linear-to-r from-white to-neutral-400 bg-clip-text text-transparent">
+          <h2 className="text-2xl font-black tracking-tight text-white">
             Hentai CENTER
+          </h2>
+        </div>
+        
+        {/* Optional Status/Label for the component */}
+        <div className="px-3 py-1 rounded-full bg-neutral-800/50 border border-neutral-700/50">
+          <span className="text-xs font-bold text-neutral-400 uppercase tracking-widest">
+            Library
           </span>
         </div>
+      </header>
 
-        {/* Animated Arrow Icon */}
-        <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          className="p-2 bg-neutral-800 rounded-full text-blue-400"
-        >
-          <ChevronDown size={20} />
-        </motion.div>
-      </button>
-
-      {/* 2. The Collapsible Content */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
-            className="overflow-hidden"
-          >
-            {/* 3. Your Existing Card Content goes inside here */}
-            <div className="pt-6">
-             <GameGrid games={games} />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Component Body */}
+      <div className="p-3 md:p-5">
+        <GameGrid games={games} />
+      </div>
+      
     </div>
-  );
+  </section>
+);
 }

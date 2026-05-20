@@ -1,17 +1,14 @@
 'use client';
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useMutation } from '@tanstack/react-query';
-// Assuming you have a way to initialize or access these clients in your app context
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { SuiGrpcClient } from '@mysten/sui/grpc';
 import { SuiGraphQLClient } from '@mysten/sui/graphql';
-import { fetchBoardPosts } from './getPostFeed';// Import the function above
+import { fetchBoardPosts } from './getPostFeed';
 import { useCurrentAccount, useDAppKit } from '@mysten/dapp-kit-react';
 import { Transaction } from '@mysten/sui/transactions';
 
-
 const suiClient = new SuiGrpcClient({
-    network: 'mainnet', // or 'testnet' / 'devnet' depending on your deployment
+    network: 'mainnet',
     baseUrl: 'https://fullnode.mainnet.sui.io:443',
 });
 
@@ -19,113 +16,110 @@ const gqlClient = new SuiGraphQLClient({
     url: 'https://graphql.mainnet.sui.io/graphql',
     network: "mainnet"
 });
+
 const PACKAGE_ID = "0x0ce1729516456933aed62ff002752a32fcd87732e95913e064b6848419031c66";
 
 export default function PostFeed() {
-
     const dAppKit = useDAppKit();
     const account = useCurrentAccount();
+    
+    // UI State for navigating between Blog Feed and Single Article
+    const [viewingPostId, setViewingPostId] = useState<string | null>(null);
+    const [replyText, setReplyText] = useState<string>('');
+
     const { data: posts, isPending, isError } = useQuery({
         queryKey: ['message-board-posts-bcs'],
         queryFn: () => fetchBoardPosts(suiClient, gqlClient),
         refetchInterval: 10000,
     });
 
-
-    const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
-    const [replyText, setReplyText] = useState<string>('');
-
     const { mutateAsync: signAndExecute } = useMutation({
         mutationFn: (tx: Transaction) => dAppKit.signAndExecuteTransaction({ transaction: tx }),
     });
 
-    const formatAddress = (addr: string) => {
-        if (!addr) return '';
-        return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
-    };
+    // --- Helpers ---
+    const formatAddress = (addr: string) => addr ? `${addr.slice(0, 6)}...${addr.slice(-4)}` : '';
 
-    const formatTimeAgo = (timestamp: number) => {
-        // Catch invalid timestamps safely
+    const formatDate = (timestamp: number) => {
         if (!timestamp || isNaN(timestamp)) return '';
-
-        const seconds = Math.floor((Date.now() - timestamp) / 1000);
-
-        if (seconds < 60) return 'Just now';
-
-        const minutes = Math.floor(seconds / 60);
-        if (minutes < 60) return `${minutes}m ago`;
-
-        const hours = Math.floor(minutes / 60);
-        if (hours < 24) return `${hours}h ago`;
-
-        const days = Math.floor(hours / 24);
-        return `${days}d ago`;
+        return new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(timestamp));
     };
 
+    const getReadTime = (text: string) => {
+        const words = text.trim().split(/\s+/).length;
+        const time = Math.ceil(words / 200); // Assume 200 words per minute
+        return `${time} min read`;
+    };
+
+    const generateAvatar = (address: string) => {
+        // Generates a consistent colorful gradient based on the author's wallet address
+        return `linear-gradient(135deg, #${address.slice(2, 8)}, #${address.slice(-6)})`;
+    };
+
+    // --- Content Parsing ---
     const parsePostContent = (rawContent: string) => {
-        // Check if the string starts with our specific reply tag
         if (rawContent.startsWith('[REPLY:0x')) {
             const closingBracketIndex = rawContent.indexOf(']');
             if (closingBracketIndex > 8) {
                 return {
                     isReply: true,
-                    parentId: rawContent.substring(7, closingBracketIndex), // Extract the ID
-                    cleanContent: rawContent.substring(closingBracketIndex + 1).trim() // Extract the message
+                    parentId: rawContent.substring(7, closingBracketIndex),
+                    cleanContent: rawContent.substring(closingBracketIndex + 1).trim()
                 };
             }
         }
-        // If no tag, it's a normal post
         return { isReply: false, parentId: null, cleanContent: rawContent };
     };
 
-    // 2. Group the posts
+    const extractBlogContent = (text: string) => {
+        const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+        if (lines.length > 1 && lines[0].length < 100) {
+            return { title: lines[0], body: lines.slice(1).join('\n\n') };
+        }
+        return { title: 'Thoughts & Musings', body: text };
+    };
+
+    // --- Organize Data ---
     const mainPosts: any[] = [];
     const repliesByParent: Record<string, any[]> = {};
 
-    // Sort the flat array into our groups
     posts?.forEach((post) => {
         const { isReply, parentId, cleanContent } = parsePostContent(post!.content);
-
-        // Attach our parsed data to the post object for rendering
-        const processedPost = { ...post, cleanContent };
+        const { title, body } = extractBlogContent(cleanContent);
+        
+        const processedPost = { ...post, cleanContent, title, body };
 
         if (isReply && parentId) {
-            // Put it in the replies bucket for that specific parent
-            if (!repliesByParent[parentId]) {
-                repliesByParent[parentId] = [];
-            }
+            if (!repliesByParent[parentId]) repliesByParent[parentId] = [];
             repliesByParent[parentId].push(processedPost);
         } else {
-            // It's a main timeline post
             mainPosts.push(processedPost);
         }
     });
+
+    // Sort newest main posts first
+    mainPosts.sort((a, b) => b.timestamp - a.timestamp);
+
+    // --- Interactions ---
     const handleDeletePost = async (postId: string) => {
         if (!account) return;
-
-        // Optional: Add a quick confirmation so users don't accidentally click it
-        if (!window.confirm("Are you sure you want to delete this post?")) return;
+        if (!window.confirm("Are you sure you want to delete this article?")) return;
 
         const tx = new Transaction();
-
         tx.moveCall({
             target: `${PACKAGE_ID}::pui_post::delete_post`,
-            arguments: [
-                tx.object(postId) // Pass the Post object ID to be consumed and destroyed
-            ],
+            arguments: [tx.object(postId)],
         });
 
         try {
             await signAndExecute(tx, {
-                onSuccess: (result) => {
-                    console.log("Post deleted:", result);
-                    alert("Post successfully deleted!");
-                    setReplyText('');
-                    setActiveReplyId(null);
+                onSuccess: () => {
+                    alert("Article deleted.");
+                    if (viewingPostId === postId) setViewingPostId(null);
                 },
                 onError: (error) => {
                     console.error("Delete failed:", error);
-                    alert("Failed to delete. Are you sure you are the author?");
+                    alert("Failed to delete. You might not be the author.");
                 },
             });
         } catch (error) {
@@ -150,164 +144,215 @@ export default function PostFeed() {
 
         try {
             await signAndExecute(tx, {
-                onSuccess: (result) => {
-                    alert("Reply posted successfully!");
-                    // Reset the UI after success
-                    setReplyText('');
-                    setActiveReplyId(null);
-                },
-                onError: (error) => {
-                    alert("Failed to publish reply.");
-                    console.error("Reply failed:", error);
-                },
+                onSuccess: () => setReplyText(''),
+                onError: () => alert("Failed to publish comment."),
             });
         } catch (error) {
             console.error("Mutation error:", error);
         }
     };
-    if (isPending) {
-        return (
-            <div className="flex justify-center p-8 text-gray-500 font-medium animate-pulse">
-                Syncing with network via gRPC...
-            </div>
-        );
-    }
 
-    if (isError) {
-        return (
-            <div className="text-red-500 text-center p-4 bg-red-50 rounded-xl border border-red-100 max-w-2xl mx-auto mt-4">
-                Failed to load the feed. Check your gRPC connection.
-            </div>
-        );
-    }
+    // --- Loading & Error States ---
+    if (isPending) return <div className="flex justify-center py-20 text-gray-400">Loading publication...</div>;
+    if (isError) return <div className="text-center py-20 text-red-500">Failed to load publication.</div>;
 
-    return (
-        <div className="max-w-3xl mx-auto mt-8 pb-12 px-4">
-            {/* --- BRIEFING HEADER --- */}
-            <div className="flex items-end justify-between border-b border-neutral-800 pb-4 mb-8">
-                <div>
-                    <h1 className="text-xl font-bold tracking-tighter text-neutral-100 uppercase italic">
-                        Daily Briefing <span className="text-emerald-500">.01 room</span>
+    // ==========================================
+    // VIEW 1: SINGLE ARTICLE READING EXPERIENCE
+    // ==========================================
+    if (viewingPostId) {
+        const activePost = mainPosts.find(p => p.id === viewingPostId);
+        if (!activePost) return <div className="text-center py-20">Article not found.</div>;
+
+        return (
+            <div className="max-w-3xl mx-auto px-6 py-12 bg-white dark:bg-[#0a0a0a] min-h-screen">
+                {/* Close Article Navigation */}
+                <div className="flex justify-end mb-8">
+                    <button 
+                        onClick={() => setViewingPostId(null)}
+                        className="group flex items-center justify-center p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all"
+                        title="Close article"
+                        aria-label="Close article"
+                    >
+                        <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            className="h-6 w-6 transform group-hover:rotate-90 transition-transform duration-300" 
+                            fill="none" 
+                            viewBox="0 0 24 24" 
+                            stroke="currentColor" 
+                            strokeWidth={2}
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                {/* Article Header */}
+                <header className="mb-10">
+                    <h1 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 dark:text-gray-100 leading-tight mb-8">
+                        {activePost.title}
                     </h1>
-                    <p className="text-xs font-mono text-neutral-500 uppercase tracking-widest">
-                        System Status: Synced 
-                    </p>
-                </div>
-                <div className="text-right">
-                    <span className="text-[10px] font-mono block leading-none">
-                        LATENCY: 24MS
-                    </span>
-                    <span className="text-[10px] font-mono block">
-                        {new Date().toLocaleDateString()}
-                    </span>
-                </div>
+                    
+                    <div className="flex items-center justify-between border-b border-t border-gray-100 dark:border-gray-800 py-4">
+                        <div className="flex items-center gap-4">
+                            <div 
+                                className="w-10 h-10 rounded-full" 
+                                style={{ background: generateAvatar(activePost.author) }}
+                            />
+                            <div>
+                                <p className="text-sm font-medium text-gray-900 dark:text-gray-200">
+                                    {formatAddress(activePost.author)}
+                                </p>
+                                <div className="flex items-center gap-2 text-xs text-gray-500">
+                                    <time>{formatDate(activePost.timestamp)}</time>
+                                    <span>·</span>
+                                    <span>{getReadTime(activePost.body)}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {account?.address === activePost.author && (
+                            <button
+                                onClick={() => handleDeletePost(activePost.id)}
+                                className="text-xs text-red-500 hover:text-red-700 font-medium px-3 py-1 rounded-full bg-red-50 dark:bg-red-900/10 transition-colors"
+                            >
+                                Delete
+                            </button>
+                        )}
+                    </div>
+                </header>
+
+                {/* Featured Image */}
+                {activePost.imageUrl && (
+                    <figure className="mb-12">
+                        <img 
+                            src={activePost.imageUrl} 
+                            alt={activePost.title} 
+                            className="w-full rounded-2xl object-cover shadow-sm"
+                        />
+                    </figure>
+                )}
+
+                {/* Article Content */}
+                <article className="prose prose-lg dark:prose-invert max-w-none font-serif text-gray-800 dark:text-gray-300 leading-loose whitespace-pre-wrap pb-16 border-b border-gray-100 dark:border-gray-800">
+                    {activePost.body}
+                </article>
+
+                {/* Comments Section */}
+                <section className="mt-12">
+                    <h3 className="text-2xl font-serif font-bold text-gray-900 dark:text-gray-100 mb-8">
+                        Responses ({repliesByParent[activePost.id]?.length || 0})
+                    </h3>
+
+                    {/* Write Comment Box */}
+                    <div className="mb-10 bg-gray-50 dark:bg-gray-900/50 p-6 rounded-xl border border-gray-100 dark:border-gray-800">
+                        <textarea
+                            value={replyText}
+                            onChange={(e) => setReplyText(e.target.value)}
+                            placeholder="What are your thoughts?"
+                            className="w-full bg-transparent border-none focus:ring-0 text-gray-800 dark:text-gray-200 resize-none outline-none min-h-[100px]"
+                        />
+                        <div className="flex justify-end mt-4">
+                            <button
+                                onClick={() => handleSubmitReply(activePost.id)}
+                                disabled={!replyText.trim()}
+                                className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50 transition-colors"
+                            >
+                                Respond
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Render Comments */}
+                    <div className="space-y-8">
+                        {repliesByParent[activePost.id]?.map((reply) => (
+                            <div key={reply.id} className="flex gap-4">
+                                <div 
+                                    className="w-8 h-8 rounded-full flex-shrink-0" 
+                                    style={{ background: generateAvatar(reply.author) }}
+                                />
+                                <div>
+                                    <div className="bg-gray-50 dark:bg-gray-900/50 rounded-2xl rounded-tl-none p-4 px-5 border border-gray-100 dark:border-gray-800">
+                                        <div className="flex items-baseline gap-3 mb-1">
+                                            <span className="font-semibold text-sm text-gray-900 dark:text-gray-100">
+                                                {formatAddress(reply.author)}
+                                            </span>
+                                            <span className="text-xs text-gray-500">
+                                                {formatDate(reply.timestamp)}
+                                            </span>
+                                        </div>
+                                        <p className="text-gray-700 dark:text-gray-300 text-sm whitespace-pre-wrap leading-relaxed">
+                                            {reply.cleanContent}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </section>
             </div>
+        );
+    }
+
+    // ==========================================
+    // VIEW 2: BLOG HOME / INDEX (THE FEED)
+    // ==========================================
+    return (
+        <div className="max-w-5xl mx-auto px-6 py-16">
+          
 
             {mainPosts.length === 0 ? (
-                <div className="bg-neutral-950 border border-neutral-900 rounded-lg p-12 text-center text-neutral-600 font-mono text-sm">
-                    NO ACTIVE INTELLIGENCE FOUND_
+                <div className="text-center text-gray-500 py-12 font-serif text-xl italic">
+                    The journal is currently empty.
                 </div>
             ) : (
-                <div className="space-y-0 border-l border-neutral-800 ml-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     {mainPosts.map((post) => (
-                        <div key={post.id} className="relative pl-8 pb-10 group/post">
-                            {/* Timeline Node Icon */}
-                            <div className="absolute -left-1.25 top-1 w-2 h-2 rounded-full bg-neutral-800 border border-neutral-700 group-hover/post:bg-emerald-500 transition-colors" />
-
-                            {/* --- ENTRY HEADER --- */}
-                            <div className="flex items-center gap-3 mb-2">
-                                {/* Removed the .slice(-4) so the full formatted ID remains intact */}
-                                <span className="text-xs font-mono font-bold text-emerald-500/80 bg-emerald-500/5 px-1.5 py-0.5 rounded">
-                                    ENTRY_{formatAddress(post.id)}
-                                </span>
-                                <span className="text-[11px] font-mono text-neutral-300 italic">
-                                    [{formatTimeAgo(post.timestamp)}]
-                                </span>
-                                <span className="text-[11px] font-mono text-neutral-700">
-                                    BY: {formatAddress(post.author)}
-                                </span>
-
-                                {account?.address === post.author && (
-                                    <button
-                                        onClick={() => handleDeletePost(post.id)}
-                                        className="ml-auto opacity-0 group-hover/post:opacity-100 text-[10px] font-bold text-red-500/60 hover:text-red-400 transition-all uppercase tracking-tighter"
-                                    >
-                                        [ Purge ]
-                                    </button>
+                        <article 
+                            key={post.id} 
+                            onClick={() => setViewingPostId(post.id)}
+                            className="group cursor-pointer flex flex-col h-full"
+                        >
+                            {/* Card Image */}
+                            <div className="w-full aspect-video  rounded-2xl overflow-hidden mb-5 relative">
+                                {post.imageUrl ? (
+                                    <img 
+                                        src={post.imageUrl} 
+                                        alt="" 
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center text-gray-300 font-serif italic">
+                                        No image provided
+                                    </div>
                                 )}
                             </div>
 
-                            {/* --- CONTENT AREA --- */}
-                            <div className="text-neutral-100 text-lg leading-relaxed max-w-xl whitespace-pre-wrap">
-                                {post.cleanContent}
-                            </div>
-
-                            {post.imageUrl && (
-                                <div className="mt-4 max-w-md rounded-sm overflow-hidden border border-neutral-800 transition-all duration-500">
-                                    <img
-                                        src={post.imageUrl}
-                                        alt="Briefing attachment"
-                                        className="w-full h-auto"
-                                        loading="lazy"
+                            {/* Card Content */}
+                            <div className="flex flex-col grow">
+                                <h2 className="text-2xl font-serif font-bold text-gray-100 dark:text-gray-100 mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug line-clamp-2">
+                                    {post.title}
+                                </h2>
+                                
+                                <p className="text-gray-100 dark:text-gray-100 text-base font-serif line-clamp-3 mb-5 grow leading-relaxed">
+                                    {post.body}
+                                </p>
+                                
+                                {/* Card Meta */}
+                                <div className="flex items-center gap-3 mt-auto pt-4 border-t border-gray-100 dark:border-gray-800/60">
+                                    <div 
+                                        className="w-6 h-6 rounded-full" 
+                                        style={{ background: generateAvatar(post.author) }}
                                     />
+                                    <span className="text-sm font-medium text-gray-900 dark:text-gray-300">
+                                        {formatAddress(post.author)}
+                                    </span>
+                                    <span className="text-gray-300 dark:text-gray-700">•</span>
+                                    <span className="text-xs text-gray-500 uppercase tracking-wider">
+                                        {formatDate(post.timestamp)}
+                                    </span>
                                 </div>
-                            )}
-
-                            {/* --- ACTION BAR (Minimalist) --- */}
-                            <div className="mt-3 flex items-center gap-4">
-                                <button
-                                    onClick={() => setActiveReplyId(activeReplyId === post.id ? null : post.id)}
-                                    className="text-[10px] font-mono font-bold text-neutral-500 hover:text-emerald-400 uppercase tracking-widest transition-colors"
-                                >
-                                    {activeReplyId === post.id ? '> CANCEL_INTEL' : '> ADD_INTEL'}
-                                </button>
                             </div>
-
-                            {/* Reply Input Box */}
-                            {activeReplyId === post.id && (
-                                <div className="mt-4 bg-neutral-950 border-l-2 border-emerald-500/30 p-4 max-w-lg">
-                                    <textarea
-                                        value={replyText}
-                                        onChange={(e) => setReplyText(e.target.value)}
-                                        placeholder="Input additional data..."
-                                        className="w-full bg-transparent text-neutral-200 text-sm focus:outline-none placeholder-neutral-700 resize-none font-mono"
-                                        rows={3}
-                                    />
-                                    <div className="flex justify-end mt-2">
-                                        <button
-                                            onClick={() => handleSubmitReply(post.id)}
-                                            className="text-[10px] font-bold bg-neutral-200 text-neutral-900 px-3 py-1 hover:bg-emerald-400 transition-colors uppercase"
-                                        >
-                                            Transmit
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* --- REPLIES (Sub-logs) --- */}
-                            {repliesByParent[post.id] && repliesByParent[post.id].length > 0 && (
-                                <div className="mt-4 space-y-4 border-l border-neutral-800/50 ml-2">
-                                    {repliesByParent[post.id].map((reply) => (
-                                        <div key={reply.id} className="pl-6 relative">
-                                            {/* Small sub-node connector */}
-                                            <div className="absolute left-0 top-2 w-3 h-1px bg-neutral-800" />
-
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <span className="text-[10px] font-mono text-neutral-600">
-                                                    SUPP_{formatAddress(reply.author).slice(-4)}
-                                                </span>
-                                                <span className="text-[10px] font-mono text-neutral-700 italic">
-                                                    {formatTimeAgo(reply.timestamp)}
-                                                </span>
-                                            </div>
-                                            <div className="text-neutral-500 text-xs border-l border-neutral-800 pl-3">
-                                                {reply.cleanContent}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                        </article>
                     ))}
                 </div>
             )}

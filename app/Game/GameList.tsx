@@ -49,9 +49,9 @@ export function GameGrid({ games }: GameGridProps) {
     if (!mounted) return <div className="loading-skeleton h-screen w-full bg-stone-950" />;
 
     return (
-        <div className="relative w-full p-8 bg-stone-950 min-h-screen">
+        <div className="relative w-full p-2 bg-stone-950 min-h-screen">
             {/* --- The Grid --- */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 mt-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-20 mt-10">
                 {cleanData.map((item) => (
                     <div key={item.id} className="flex justify-center">
                         <div className="w-fit h-fit transition-transform duration-500 hover:-translate-y-3">
