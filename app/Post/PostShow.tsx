@@ -22,7 +22,7 @@ const PACKAGE_ID = "0x0ce1729516456933aed62ff002752a32fcd87732e95913e064b6848419
 export default function PostFeed() {
     const dAppKit = useDAppKit();
     const account = useCurrentAccount();
-    
+
     // UI State for navigating between Blog Feed and Single Article
     const [viewingPostId, setViewingPostId] = useState<string | null>(null);
     const [replyText, setReplyText] = useState<string>('');
@@ -86,8 +86,8 @@ export default function PostFeed() {
     posts?.forEach((post) => {
         const { isReply, parentId, cleanContent } = parsePostContent(post!.content);
         const { title, body } = extractBlogContent(cleanContent);
-        
-        const processedPost = { ...post, cleanContent, title, body };
+
+        const processedPost = { ...post, title, body };
 
         if (isReply && parentId) {
             if (!repliesByParent[parentId]) repliesByParent[parentId] = [];
@@ -167,18 +167,18 @@ export default function PostFeed() {
             <div className="max-w-3xl mx-auto px-6 py-12 bg-white dark:bg-[#0a0a0a] min-h-screen">
                 {/* Close Article Navigation */}
                 <div className="flex justify-end mb-8">
-                    <button 
+                    <button
                         onClick={() => setViewingPostId(null)}
                         className="group flex items-center justify-center p-2.5 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-all"
                         title="Close article"
                         aria-label="Close article"
                     >
-                        <svg 
-                            xmlns="http://www.w3.org/2000/svg" 
-                            className="h-6 w-6 transform group-hover:rotate-90 transition-transform duration-300" 
-                            fill="none" 
-                            viewBox="0 0 24 24" 
-                            stroke="currentColor" 
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-6 w-6 transform group-hover:rotate-90 transition-transform duration-300"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
                             strokeWidth={2}
                         >
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -191,11 +191,11 @@ export default function PostFeed() {
                     <h1 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 dark:text-gray-100 leading-tight mb-8">
                         {activePost.title}
                     </h1>
-                    
+
                     <div className="flex items-center justify-between border-b border-t border-gray-100 dark:border-gray-800 py-4">
                         <div className="flex items-center gap-4">
-                            <div 
-                                className="w-10 h-10 rounded-full" 
+                            <div
+                                className="w-10 h-10 rounded-full"
                                 style={{ background: generateAvatar(activePost.author) }}
                             />
                             <div>
@@ -204,8 +204,8 @@ export default function PostFeed() {
                                 </p>
                                 <div className="flex items-center gap-2 text-xs text-gray-500">
                                     <time>{formatDate(activePost.timestamp)}</time>
-                                    <span>·</span>
-                                    <span>{getReadTime(activePost.body)}</span>
+                                   
+                                    
                                 </div>
                             </div>
                         </div>
@@ -224,16 +224,16 @@ export default function PostFeed() {
                 {/* Featured Image */}
                 {activePost.imageUrl && (
                     <figure className="mb-12">
-                        <img 
-                            src={activePost.imageUrl} 
-                            alt={activePost.title} 
+                        <img
+                            src={activePost.imageUrl}
+                            alt={activePost.title}
                             className="w-full rounded-2xl object-cover shadow-sm"
                         />
                     </figure>
                 )}
 
                 {/* Article Content */}
-                <article className="prose prose-lg dark:prose-invert max-w-none font-serif text-gray-800 dark:text-gray-300 leading-loose whitespace-pre-wrap pb-16 border-b border-gray-100 dark:border-gray-800">
+                <article className="text-lg dark:prose-invert max-w-none font-serif text-black dark:text-gray-300 leading-loose whitespace-pre-wrap pb-16 border-b border-gray-100 dark:border-gray-800">
                     {activePost.body}
                 </article>
 
@@ -245,37 +245,37 @@ export default function PostFeed() {
 
                     {/* Write Comment Box */}
                     <div className="mb-10 bg-gray-50 dark:bg-gray-900/50 p-6 rounded-xl border border-gray-100 dark:border-gray-800">
-    <textarea
-        value={replyText}
-        onChange={(e) => setReplyText(e.target.value)}
-        placeholder={account ? "What are your thoughts?" : "Connect your wallet to leave a comment..."}
-        disabled={!account} // Optional: locks the textarea if not connected
-        className="w-full bg-transparent border-none focus:ring-0 text-gray-800 dark:text-gray-200 resize-none outline-none min-h-[100px] disabled:opacity-50"
-    />
-    <div className="flex justify-end mt-4">
-        {account ? (
-            <button
-                onClick={() => handleSubmitReply(activePost.id)}
-                disabled={!replyText.trim()}
-                className="bg-black dark:bg-white text-white dark:text-gray-900 px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50 transition-colors"
-            >
-                Respond
-            </button>
-        ) : (
-            <span className="inline-flex items-center gap-2 text-sm font-semibold text-white font-mono tracking-wide bg-blue-950 border px-4 py-2 rounded-lg shadow-[0_0_15px_rgba(59,130,246,0.1)]">
-               
-                Connect Wallet to Respond
-            </span>
-        )}
-    </div>
-</div>
+                        <textarea
+                            value={replyText}
+                            onChange={(e) => setReplyText(e.target.value)}
+                            placeholder={account ? "What are your thoughts?" : "Connect your wallet to leave a comment..."}
+                            disabled={!account} // Optional: locks the textarea if not connected
+                            className="w-full bg-transparent border-none focus:ring-0 text-gray-800 dark:text-gray-200 resize-none outline-none min-h-[100px] disabled:opacity-50"
+                        />
+                        <div className="flex justify-end mt-4">
+                            {account ? (
+                                <button
+                                    onClick={() => handleSubmitReply(activePost.id)}
+                                    disabled={!replyText.trim()}
+                                    className="bg-black dark:bg-white text-white dark:text-gray-900 px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50 transition-colors"
+                                >
+                                    Respond
+                                </button>
+                            ) : (
+                                <span className="inline-flex items-center gap-2 text-sm font-semibold text-white font-mono tracking-wide bg-blue-950 border px-4 py-2 rounded-lg shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+
+                                    Connect Wallet to Respond
+                                </span>
+                            )}
+                        </div>
+                    </div>
 
                     {/* Render Comments */}
                     <div className="space-y-8">
                         {repliesByParent[activePost.id]?.map((reply) => (
                             <div key={reply.id} className="flex gap-4">
-                                <div 
-                                    className="w-8 h-8 rounded-full flex-shrink-0" 
+                                <div
+                                    className="w-8 h-8 rounded-full flex-shrink-0"
                                     style={{ background: generateAvatar(reply.author) }}
                                 />
                                 <div>
@@ -306,7 +306,7 @@ export default function PostFeed() {
     // ==========================================
     return (
         <div className="max-w-5xl mx-auto px-6 py-16">
-          
+
 
             {mainPosts.length === 0 ? (
                 <div className="text-center text-gray-500 py-12 font-serif text-xl italic">
@@ -315,17 +315,17 @@ export default function PostFeed() {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     {mainPosts.map((post) => (
-                        <article 
-                            key={post.id} 
+                        <article
+                            key={post.id}
                             onClick={() => setViewingPostId(post.id)}
                             className="group cursor-pointer flex flex-col h-full"
                         >
                             {/* Card Image */}
                             <div className="w-full aspect-video  rounded-2xl overflow-hidden mb-5 relative">
                                 {post.imageUrl ? (
-                                    <img 
-                                        src={post.imageUrl} 
-                                        alt="" 
+                                    <img
+                                        src={post.imageUrl}
+                                        alt=""
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                     />
                                 ) : (
@@ -340,22 +340,22 @@ export default function PostFeed() {
                                 <h2 className="text-2xl font-serif font-bold text-gray-100 dark:text-gray-100 mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug line-clamp-2">
                                     {post.title}
                                 </h2>
-                                
+
                                 <p className="text-gray-100 dark:text-gray-100 text-base font-serif line-clamp-3 mb-5 grow leading-relaxed">
                                     {post.body}
                                 </p>
-                                
+
                                 {/* Card Meta */}
                                 <div className="flex items-center gap-3 mt-auto pt-4 border-t border-gray-100 dark:border-gray-800/60">
-                                    <div 
-                                        className="w-6 h-6 rounded-full" 
+                                    <div
+                                        className="w-6 h-6 rounded-full"
                                         style={{ background: generateAvatar(post.author) }}
                                     />
                                     <span className="text-sm font-medium text-gray-900 dark:text-gray-300">
                                         {formatAddress(post.author)}
                                     </span>
                                     <span className="text-gray-300 dark:text-gray-700">•</span>
-                                    <span className="text-xs text-gray-500 uppercase tracking-wider">
+                                    <span className="text-xs text-gray-100 uppercase tracking-wider">
                                         {formatDate(post.timestamp)}
                                     </span>
                                 </div>
