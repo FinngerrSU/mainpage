@@ -43,7 +43,7 @@ export default function WrappedGame() {
           <div className="w-1.5 h-6 bg-blue-500 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
           
           <h2 className="text-2xl font-black tracking-tight text-white">
-            Hentai CENTER
+            GAME CENTER
           </h2>
         </div>
         

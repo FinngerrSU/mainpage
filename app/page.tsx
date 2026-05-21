@@ -1,4 +1,4 @@
-import { TradeAndRewards } from './TradeAndRewards';
+
 import ConnectWalletBtn from './Wallet';
 
 import PostFeed from './Post/PostShow';
@@ -6,12 +6,12 @@ import PostFeed from './Post/PostShow';
 import WrappedData from './data/wrapped';
 import WrappedCetus from './cetus/wrapped';
 import WrappedGame from './Game/wrapped';
-import {BulletinBoard} from './board';
+import { BulletinBoard } from './board';
 export default function Home() {
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-50 p-8 md:p-16 flex flex-col items-center justify-center font-sans">
 
-      
+
       <div className="absolute top-6 right-6 md:top-8 md:right-8 z-50 flex items-center gap-4 sm:gap-6">
         {/* Replace the button below with your actual <ConnectWalletBtn /> */}
         <ConnectWalletBtn />
@@ -19,17 +19,37 @@ export default function Home() {
 
 
       {/* Hero Section */}
-      <div className="max-w-3xl text-center mb-16 space-y-4">
-        <h1 className="text-5xl md:text-6xl font-black tracking-widest text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-cyan-300 drop-shadow-[0_0_25px_rgba(34,211,238,0.4)]">
+      <div className="relative inline-block group">
+        {/* The Vibrant Backlight */}
+        <div className="absolute inset-0 bg-linear-to-r from-blue-600 to-cyan-400 blur-2xl opacity-60 group-hover:opacity-100 group-hover:from-blue-500 group-hover:to-cyan-300 transition-all duration-300 -z-10"></div>
+
+        {/* The Text */}
+        <h1 className="relative text-6xl md:text-7xl font-black tracking-widest text-white uppercase drop-shadow-md">
           PUIMON
         </h1>
       </div>
-      <BulletinBoard/>
-      <WrappedData />
-      <WrappedCetus/>
-      <WrappedGame/>
-      
+      <BulletinBoard />
       <PostFeed />
+      <WrappedData />
+      <WrappedCetus />
+      <WrappedGame />
+      {/* Global Disclaimer Footer */}
+      <footer className="w-full max-w-3xl mx-auto mt-20 pt-8 border-t border-neutral-800/60 text-center">
+        <div className="bg-neutral-900/40 border border-neutral-800/80 rounded-xl p-6 shadow-[0_0_20px_rgba(0,0,0,0.3)]">
+          <div className="flex items-center justify-center gap-2 mb-3">
+            
+            <span className="text-lg font-mono font-bold tracking-widest text-white uppercase">
+               Legal & Compliance
+            </span>
+          </div>
+          <p className="text-lg text-white font-sans leading-relaxed max-w-2xl mx-auto">
+            All materials shared on this platform—including open-source software, games, academic research papers, and curated news data—are provided strictly for <strong className="text-[#FF3D2F] font-semibold">educational, academic, and non-commercial research purposes</strong>.
+          </p>
+          <p className="text-base font-mono text-[#FFF871] mt-3">
+            No financial advice. Intellectual property belongs to their respective owners unless stated otherwise.
+          </p>
+        </div>
+      </footer>
     </main>
   );
 }

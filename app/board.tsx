@@ -17,7 +17,7 @@ export function BulletinBoard() {
               Game function is online
             </h3>
             <p className="text-neutral-300 leading-relaxed text-lg">
-              YOu can download game in game center right now
+              You can download game in game center right now
             </p>
           </div>
          

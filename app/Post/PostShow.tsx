@@ -245,22 +245,30 @@ export default function PostFeed() {
 
                     {/* Write Comment Box */}
                     <div className="mb-10 bg-gray-50 dark:bg-gray-900/50 p-6 rounded-xl border border-gray-100 dark:border-gray-800">
-                        <textarea
-                            value={replyText}
-                            onChange={(e) => setReplyText(e.target.value)}
-                            placeholder="What are your thoughts?"
-                            className="w-full bg-transparent border-none focus:ring-0 text-gray-800 dark:text-gray-200 resize-none outline-none min-h-[100px]"
-                        />
-                        <div className="flex justify-end mt-4">
-                            <button
-                                onClick={() => handleSubmitReply(activePost.id)}
-                                disabled={!replyText.trim()}
-                                className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50 transition-colors"
-                            >
-                                Respond
-                            </button>
-                        </div>
-                    </div>
+    <textarea
+        value={replyText}
+        onChange={(e) => setReplyText(e.target.value)}
+        placeholder={account ? "What are your thoughts?" : "Connect your wallet to leave a comment..."}
+        disabled={!account} // Optional: locks the textarea if not connected
+        className="w-full bg-transparent border-none focus:ring-0 text-gray-800 dark:text-gray-200 resize-none outline-none min-h-[100px] disabled:opacity-50"
+    />
+    <div className="flex justify-end mt-4">
+        {account ? (
+            <button
+                onClick={() => handleSubmitReply(activePost.id)}
+                disabled={!replyText.trim()}
+                className="bg-black dark:bg-white text-white dark:text-gray-900 px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-50 transition-colors"
+            >
+                Respond
+            </button>
+        ) : (
+            <span className="inline-flex items-center gap-2 text-sm font-semibold text-white font-mono tracking-wide bg-blue-950 border px-4 py-2 rounded-lg shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+               
+                Connect Wallet to Respond
+            </span>
+        )}
+    </div>
+</div>
 
                     {/* Render Comments */}
                     <div className="space-y-8">

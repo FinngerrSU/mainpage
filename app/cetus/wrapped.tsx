@@ -18,7 +18,7 @@ export default function WrappedCetus() {
         <div className="flex flex-col items-start">
           
           <span className="text-xl font-bold bg-linear-to-r from-white to-neutral-400 bg-clip-text text-transparent">
-            DEX TOOL
+            Rate Calculator
           </span>
         </div>
 
@@ -43,7 +43,7 @@ export default function WrappedCetus() {
           >
             {/* 3. Your Existing Card Content goes inside here */}
             <div className="pt-6">
-              <CreateCetusPool />
+              
               <CryptoConverter/>
             </div>
           </motion.div>
