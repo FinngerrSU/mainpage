@@ -45,11 +45,7 @@ export default function PostFeed() {
         return new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(timestamp));
     };
 
-    const getReadTime = (text: string) => {
-        const words = text.trim().split(/\s+/).length;
-        const time = Math.ceil(words / 200); // Assume 200 words per minute
-        return `${time} min read`;
-    };
+   
 
     const generateAvatar = (address: string) => {
         // Generates a consistent colorful gradient based on the author's wallet address
@@ -73,7 +69,7 @@ export default function PostFeed() {
 
     const extractBlogContent = (text: string) => {
         const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-        if (lines.length > 1 && lines[0].length < 100) {
+        if (lines.length > 1 && lines[0].length < 200) {
             return { title: lines[0], body: lines.slice(1).join('\n\n') };
         }
         return { title: 'Thoughts & Musings', body: text };
