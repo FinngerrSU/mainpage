@@ -17,9 +17,11 @@ const gqlClient = new SuiGraphQLClient({
     network: "mainnet"
 });
 
-const PACKAGE_ID = "0x0ce1729516456933aed62ff002752a32fcd87732e95913e064b6848419031c66";
-
-export default function PostFeed() {
+interface PostFeedProps {
+    packageId: string;
+    title: string;
+}
+export default function PostFeed({ packageId,title }: PostFeedProps) {
     const dAppKit = useDAppKit();
     const account = useCurrentAccount();
 
@@ -28,8 +30,8 @@ export default function PostFeed() {
     const [replyText, setReplyText] = useState<string>('');
 
     const { data: posts, isPending, isError } = useQuery({
-        queryKey: ['message-board-posts-bcs'],
-        queryFn: () => fetchBoardPosts(suiClient, gqlClient),
+        queryKey: ['message-board-posts-bcs', packageId],
+        queryFn: () => fetchBoardPosts(packageId,suiClient, gqlClient),
         refetchInterval: 10000,
     });
 
@@ -103,7 +105,7 @@ export default function PostFeed() {
 
         const tx = new Transaction();
         tx.moveCall({
-            target: `${PACKAGE_ID}::pui_post::delete_post`,
+            target: `${packageId}::pui_post::delete_post`,
             arguments: [tx.object(postId)],
         });
 
@@ -130,7 +132,7 @@ export default function PostFeed() {
         const tx = new Transaction();
 
         tx.moveCall({
-            target: `${PACKAGE_ID}::pui_post::create_post`,
+            target: `${packageId}::pui_post::create_post`,
             arguments: [
                 tx.pure.string(taggedContent),
                 tx.pure.option('string', null),
@@ -301,8 +303,10 @@ export default function PostFeed() {
     // VIEW 2: BLOG HOME / INDEX (THE FEED)
     // ==========================================
     return (
-        <div className="max-w-5xl mx-auto px-6 py-16">
-
+        <div className="max-w-5xl mx-auto px-6 py-12 border border-blue-500/40 bg-transparent rounded-xl mt-10">
+            <h2 className="text-4xl font-bold text-cyan-300 mb-10 pb-2">
+                {title}
+            </h2>
 
             {mainPosts.length === 0 ? (
                 <div className="text-center text-gray-500 py-12 font-serif text-xl italic">

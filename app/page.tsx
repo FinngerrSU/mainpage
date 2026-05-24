@@ -7,6 +7,10 @@ import WrappedData from './data/wrapped';
 import WrappedCetus from './cetus/wrapped';
 import WrappedGame from './Game/wrapped';
 import { BulletinBoard } from './board';
+
+const PACKAGE_ID_1 = "0x0ce1729516456933aed62ff002752a32fcd87732e95913e064b6848419031c66";
+const PACKAGE_ID_2="0xa9dc35c26990e4f4dd777f1d02d592f773bb8623bb1ac85239e4b5af3ec759f9";
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-50 p-8 md:p-16 flex flex-col items-center justify-center font-sans">
@@ -29,7 +33,8 @@ export default function Home() {
         </h1>
       </div>
       <BulletinBoard />
-      <PostFeed />
+      <PostFeed packageId={PACKAGE_ID_1} title='Global News'/>
+       <PostFeed packageId={PACKAGE_ID_2} title='Game News'/>
       <WrappedData />
       <WrappedCetus />
       <WrappedGame />

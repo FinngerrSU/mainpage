@@ -3,7 +3,7 @@ import { SuiGrpcClient } from '@mysten/sui/grpc';
 import { bcs } from "@mysten/sui/bcs";
 import { SuiGraphQLClient } from '@mysten/sui/graphql';
 
-const PACKAGE_ID = "0x0ce1729516456933aed62ff002752a32fcd87732e95913e064b6848419031c66";
+
 
 // 1. BCS Schema for the Post object
 // Must match the Move struct exactly: id, author, content, image_url
@@ -33,7 +33,7 @@ const querySuiEvents = graphql(`
     }
   }
 `);
-export async function fetchBoardPosts(suiClient: SuiGrpcClient, graphqlClient: SuiGraphQLClient) {
+export async function fetchBoardPosts(package_id:string,suiClient: SuiGrpcClient, graphqlClient: SuiGraphQLClient) {
     console.log("Scanning recent events for message board posts...");
 
     try {
@@ -41,7 +41,7 @@ export async function fetchBoardPosts(suiClient: SuiGrpcClient, graphqlClient: S
         const data: any = await graphqlClient.query({
             query: querySuiEvents,
             variables: {
-                module: PACKAGE_ID
+                module: package_id
             }
         });
 
