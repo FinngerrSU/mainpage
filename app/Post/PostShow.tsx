@@ -28,6 +28,7 @@ export default function PostFeed({ packageId,title }: PostFeedProps) {
     // UI State for navigating between Blog Feed and Single Article
     const [viewingPostId, setViewingPostId] = useState<string | null>(null);
     const [replyText, setReplyText] = useState<string>('');
+    const [showAll, setShowAll] = useState(false);
 
     const { data: posts, isPending, isError } = useQuery({
         queryKey: ['message-board-posts-bcs', packageId],
@@ -97,7 +98,10 @@ export default function PostFeed({ packageId,title }: PostFeedProps) {
 
     // Sort newest main posts first
     mainPosts.sort((a, b) => b.timestamp - a.timestamp);
+    
 
+    // NEW: Determine which posts to actually render
+    const displayedPosts = showAll ? mainPosts : mainPosts.slice(0, 2);
     // --- Interactions ---
     const handleDeletePost = async (postId: string) => {
         if (!account) return;
@@ -304,17 +308,29 @@ export default function PostFeed({ packageId,title }: PostFeedProps) {
     // ==========================================
     return (
         <div className="max-w-5xl mx-auto px-6 py-12 border border-blue-500/40 bg-transparent rounded-xl mt-10">
-            <h2 className="text-4xl font-bold text-cyan-300 mb-10 pb-2">
-                {title}
-            </h2>
+            <div className="flex justify-between items-center mb-10 pb-2">
+                <h2 className="text-4xl font-bold text-cyan-300 m-0">
+                    {title}
+                </h2>
+                
+                {/* Only show the button if there are actually more than 2 posts */}
+                {mainPosts.length > 2 && (
+                    <button 
+                        onClick={() => setShowAll(!showAll)}
+                        className="px-4 py-2 border border-cyan-300 text-cyan-300 rounded-md hover:bg-cyan-300 hover:text-black transition-colors font-medium text-sm"
+                    >
+                        {showAll ? "See Less" : "See More"}
+                    </button>
+                )}
+            </div>
 
-            {mainPosts.length === 0 ? (
+            {displayedPosts.length === 0 ? (
                 <div className="text-center text-gray-500 py-12 font-serif text-xl italic">
                     The journal is currently empty.
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    {mainPosts.map((post) => (
+                    {displayedPosts.map((post) => (
                         <article
                             key={post.id}
                             onClick={() => setViewingPostId(post.id)}
