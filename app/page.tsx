@@ -36,8 +36,7 @@ export default function Home() {
       <PostFeed packageId={PACKAGE_ID_1} title='Global News'/>
        <PostFeed packageId={PACKAGE_ID_2} title='Game News'/>
       <PostFeed packageId={PACKAGE_ID_3} title='Opinions'/>
-      <WrappedData />
-      <WrappedCetus />
+     
       <WrappedGame />
       {/* Global Disclaimer Footer */}
       <footer className="w-full max-w-3xl mx-auto mt-20 pt-8 border-t border-neutral-800/60 text-center">

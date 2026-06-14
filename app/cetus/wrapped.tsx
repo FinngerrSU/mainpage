@@ -43,7 +43,7 @@ export default function WrappedCetus() {
           >
             {/* 3. Your Existing Card Content goes inside here */}
             <div className="pt-6">
-              
+              <CreateCetusPool/>
               <CryptoConverter/>
             </div>
           </motion.div>
