@@ -9,7 +9,7 @@ import WrappedGame from './Game/wrapped';
 import { BulletinBoard } from './board';
 
 const PACKAGE_ID_1 = "0x0ce1729516456933aed62ff002752a32fcd87732e95913e064b6848419031c66";
-const PACKAGE_ID_2="0xa9dc35c26990e4f4dd777f1d02d592f773bb8623bb1ac85239e4b5af3ec759f9";
+
 const PACKAGE_ID_3='0xa2f7263981c8e9f60580b7304dc0fc471f31eecbf88d044d1cfac46f8add1f29';
 const PACKAGE_ID_4='0x6220a85523dc444b168eaba68a6beb5ab8c0535a18c118c0e8bd66c1ec456fed';
 export default function Home() {
@@ -33,9 +33,9 @@ export default function Home() {
           PUIMON
         </h1>
       </div>
-      <BulletinBoard />
+      
       <PostFeed packageId={PACKAGE_ID_1} title='Global News'/>
-       <PostFeed packageId={PACKAGE_ID_2} title='Game News'/>
+       
       <PostFeed packageId={PACKAGE_ID_3} title='Opinions'/>
       <PostFeed packageId={PACKAGE_ID_4} title='Important Article'/>
       {/* Global Disclaimer Footer */}
