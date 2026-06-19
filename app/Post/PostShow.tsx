@@ -224,10 +224,10 @@ export default function PostFeed({ packageId,title }: PostFeedProps) {
                 </header>
 
                 {/* Featured Image */}
-                {activePost.imageUrl && (
+                {activePost.imageUrls && (
                     <figure className="mb-12">
                         <img
-                            src={activePost.imageUrl}
+                            src={activePost.imageUrls}
                             alt={activePost.title}
                             className="w-full rounded-2xl object-cover shadow-sm"
                         />
@@ -337,15 +337,26 @@ export default function PostFeed({ packageId,title }: PostFeedProps) {
                             className="group cursor-pointer flex flex-col h-full"
                         >
                             {/* Card Image */}
-                            <div className="w-full aspect-video  rounded-2xl overflow-hidden mb-5 relative">
-                                {post.imageUrl ? (
-                                    <img
-                                        src={post.imageUrl}
-                                        alt=""
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                    />
+                            {/* Card Image */}
+                            <div className="w-full aspect-video rounded-2xl overflow-hidden mb-5 relative bg-gray-800/20">
+                                {post.imageUrls && post.imageUrls.length > 0 ? (
+                                    <>
+                                        {/* Show the first image as the cover */}
+                                        <img
+                                            src={post.imageUrls[0]}
+                                            alt=""
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                        />
+                                        
+                                        {/* If there are multiple images, show a little badge indicator */}
+                                        {post.imageUrls.length > 1 && (
+                                            <div className="absolute top-3 right-3 bg-black/70 text-white text-xs font-bold px-2.5 py-1 rounded-md backdrop-blur-md">
+                                                +{post.imageUrls.length - 1} photos
+                                            </div>
+                                        )}
+                                    </>
                                 ) : (
-                                    <div className="w-full h-full flex items-center justify-center text-gray-300 font-serif italic">
+                                    <div className="w-full h-full flex items-center justify-center text-gray-400 font-serif italic border border-gray-800/50 rounded-2xl">
                                         No image provided
                                     </div>
                                 )}

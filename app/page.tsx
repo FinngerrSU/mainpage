@@ -11,6 +11,7 @@ import { BulletinBoard } from './board';
 const PACKAGE_ID_1 = "0x0ce1729516456933aed62ff002752a32fcd87732e95913e064b6848419031c66";
 const PACKAGE_ID_2="0xa9dc35c26990e4f4dd777f1d02d592f773bb8623bb1ac85239e4b5af3ec759f9";
 const PACKAGE_ID_3='0xa2f7263981c8e9f60580b7304dc0fc471f31eecbf88d044d1cfac46f8add1f29';
+const PACKAGE_ID_4='0x6220a85523dc444b168eaba68a6beb5ab8c0535a18c118c0e8bd66c1ec456fed';
 export default function Home() {
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-50 p-8 md:p-16 flex flex-col items-center justify-center font-sans">
@@ -36,8 +37,7 @@ export default function Home() {
       <PostFeed packageId={PACKAGE_ID_1} title='Global News'/>
        <PostFeed packageId={PACKAGE_ID_2} title='Game News'/>
       <PostFeed packageId={PACKAGE_ID_3} title='Opinions'/>
-     
-      <WrappedGame />
+      <PostFeed packageId={PACKAGE_ID_4} title='Important Article'/>
       {/* Global Disclaimer Footer */}
       <footer className="w-full max-w-3xl mx-auto mt-20 pt-8 border-t border-neutral-800/60 text-center">
         <div className="bg-neutral-900/40 border border-neutral-800/80 rounded-xl p-6 shadow-[0_0_20px_rgba(0,0,0,0.3)]">
